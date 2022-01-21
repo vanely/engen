@@ -12,8 +12,13 @@ There are comments for how to use the `clone_git_repo` function inside of the
 `PublicEnvGenerator/utils/git-utils/git_utils.sh`
 
 ### Install Programs
-Add install functions and put them in install arrays. Still need to add installs for other OSes 
+Add install functions and put them in install arrays.
+TODO: Add installs for other OSes 
 
 ### Steps To Execute
-The main.sh executable at the top level of PublicEnvGenerator creates all the directories for the env,
-and clones the respective git repos from my github account into them.
+The `main.sh` executable at the top level of PublicEnvGenerator will present the following choices
+
+0: Generate Programming Environment
+1: Install Programs
+2: Clean Up
+3: Git Utils
