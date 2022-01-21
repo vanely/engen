@@ -18,7 +18,7 @@ TODO: Add installs for other OSes
 ### Steps To Execute
 The `main.sh` executable at the top level of PublicEnvGenerator will present the following choices
 
-0: Generate Programming Environment
-1: Install Programs
-2: Clean Up
+0: Generate Programming Environment<br/>
+1: Install Programs<br/>
+2: Clean Up<br/>
 3: Git Utils
