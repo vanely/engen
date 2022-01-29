@@ -5,12 +5,18 @@
 
 # spellcheck source=./env-creation/generate_directory_tree.sh
 source ./env-creation/generate_directory_tree.sh
+# spellcheck source=./env-creation/directories.sh
+source ./env-creation/directories.sh
 # spellcheck source=./programs-to-install/linux/choose_programs_and_install.sh
 source ./programs-to-install/linux/choose_programs_and_install.sh
 # spellcheck source=./utils/cleanup/main.sh
 source ./utils/cleanup/main.sh
 # spellcheck source=./utils/git-utils/main.sh
 source ./utils/git-utils/main.sh
+# spellcheck source=./utils/helpers/vscode_extensions.sh
+source ./utils/helpers/vscode_extensions.sh
+# spellcheck source=./utils/helpers/validation.sh
+source ./utils/helpers/validation.sh
 
 # script flags
 FIRST_PARAM=$1
@@ -50,16 +56,20 @@ esac
 
 PROCESSES_ARRAY=(
   create_directories
+  update_dir_tree
   iteratively_install_programs
   clean_up
   git_utils
+  choose_extenstions_to_install
 )
 
 PROCESS_NAMES_ARRAY=(
-  'Generate Programming Environment'
+  'Create Directory Tree'
+  'Update Directory Tree'
   'Install Programs'
   'Clean Up'
   'Git Utils'
+  'VS Code Extensions'
 )
 
 PROCESS_NAMES_ARRAY_LEN="${#PROCESS_NAMES_ARRAY[@]}"
@@ -74,9 +84,18 @@ do
 done
 echo
 echo -n "> "
-read -r processes
+read -r process
 
-for i in ${processes[@]}
+while "true" 
 do
-  ${PROCESSES_ARRAY[i]}
+  if [[ "$(input_is_number "${process}")" != "true" ]] ; then
+    echo
+    echo "Input must be a number in the above list"
+    echo
+    echo -n "> "
+    read -r process
+  else
+    ${PROCESSES_ARRAY[process]}
+    break
+  fi
 done

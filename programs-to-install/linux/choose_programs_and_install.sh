@@ -5,8 +5,9 @@
 
 # spellcheck source=./programs-to-install/linux/dev_tools_installs.sh
 source ./programs-to-install/linux/dev_tools_installs.sh
+# spellcheck source=./utils/helpers/validation.sh
+source ./utils/helpers/validation.sh
 
-# length of installs arrays
 PROGRAM_NAMES_ARRAY_LEN="${#PROGRAM_NAMES_ARRAY[@]}"
 
 iteratively_install_programs() {
@@ -28,15 +29,24 @@ iteratively_install_programs() {
   echo -n "> "
   read -r indexes
 
-  if [[ ${indexes} == 'all' ]] ; then
-    install_all_programs
-  else
-    for i in ${indexes[@]}
-    do
-      # echo "${FUNCTIONS_ARRAY[i]}"
-
-      # Invoke install function
-      ${FUNCTIONS_ARRAY[i]} 
-    done
-  fi
+  while "true"
+  do
+    if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
+      if [[ ${indexes} == 'all' ]] ; then
+        install_all_programs
+      else
+        for i in ${indexes[@]}
+        do
+          ${FUNCTIONS_ARRAY[i]}
+        done
+      fi
+      break
+    else
+      echo
+      echo "Input must be a number in the above list, or 'all'"
+      echo
+      echo -n "> "
+      read -r indexes
+    fi
+  done
 }

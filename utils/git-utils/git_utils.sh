@@ -1,14 +1,23 @@
 #!/bin/bash
 
 # clone repos into their respective directories
-# arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into
+# arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into arg3=access("private" || ("public" || ""))
 clone_git_repo() {
-  GIT_REPO_TEMPLATE="https://github.com/<USER_NAME>/${1}.git"
+  GIT_REPO_TEMPLATE=""
+  if [[ "${3}" == "private" ]] ; then
+    # bypass auth "https://<username>:<password>@github.com/<username>/repo-name.git"
+    GIT_REPO_TEMPLATE="https://<user_name>:<personal_access_token>@github.com/<user_name>/${1}.git"
+  elif [[ "${3}" == "public" ]] || [[ -z "${3}" ]] ; then
+    GIT_REPO_TEMPLATE="https://github.com/<user_name>/${1}.git"
+  else
+    echo "Inlavid access modifier(3rd argument: ${3})."
+    echo "Use either: 'private' or 'public' or leave empty == public))"
+    exit
+  fi
   echo
   echo "==================================================="
   cd "${2}" || exit
   echo "Cloning ${GIT_REPO_TEMPLATE} into ${2}"
-  # will clone the contents of a repo into a dir but won't create a new dir
   git clone "${GIT_REPO_TEMPLATE}" .
   echo "==================================================="
 }
@@ -35,4 +44,24 @@ check_status_of_working_tree() {
   echo "${1}..."
   git status
   echo "==================================================="
+}
+
+github_auth() {
+  gh auth login --with-token < ./utils/git-utils/tokenFile.txt
+}
+
+github_deauth() {
+  gh auth logout
+}
+
+# arg1=repo_name arg2=access
+create_repo_with_gh_cli() {
+  echo "Creating repo: ${1}"
+  gh repo create "${1}" "--${2}"
+}
+
+# arg1=repo name
+delete_repo_with_gh_cli() {
+  echo "Deleting repo: ${1}"
+  gh repo delete "${1}" --confirm
 }
