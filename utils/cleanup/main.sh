@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# spellcheck source=./utils/cleanup/cleanup_installs.sh
-source ./utils/cleanup/cleanup_dir_trees.sh
-# spellcheck source=./utils/cleanup/cleanup_installs.sh
-source ./utils/cleanup/cleanup_installs.sh # not implremented yet
-# spellcheck source=./utils/helpers/validation.sh
-source ./utils/helpers/validation.sh
+# spellcheck source="${HOME}/engen/utils/cleanup/cleanup_installs.sh"
+source "${HOME}/engen/utils/cleanup/cleanup_dir_trees.sh"
+# spellcheck source="${HOME}/engen/utils/cleanup/cleanup_installs.sh"
+source "${HOME}/engen/utils/cleanup/cleanup_installs.sh" # not implremented yet
+# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
+source "${HOME}/engen/utils/helpers/validation.sh"
 
 remove_dir_trees() {
   iteratively_remove_env_dirs
@@ -41,6 +41,10 @@ CLEAN_UP_OPTION_NAMES_ARRAY=(
 CLEAN_UP_OPTIONS_ARRAY_LEN="${#CLEAN_UP_OPTIONS_ARRAY[@]}"
 
 clean_up() {
+  echo "========================================================================================="
+  echo "================================== [--CLEAN UP--]========================================"
+  echo "========================================================================================="
+  echo
   for (( i=0; i<"${CLEAN_UP_OPTIONS_ARRAY_LEN}"; i++ ))
   do
     echo "${i}: ${CLEAN_UP_OPTION_NAMES_ARRAY[i]}"
@@ -51,6 +55,7 @@ clean_up() {
   echo
   echo -n "> "
   read -r index
+  echo
 
   while "true" 
   do
@@ -60,6 +65,7 @@ clean_up() {
       echo
       echo -n "> "
       read -r index
+      echo
     else
       ${CLEAN_UP_OPTIONS_ARRAY[index]}
       break

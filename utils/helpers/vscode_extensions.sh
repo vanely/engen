@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # spellcheck source=./utils/helpers/validation.sh
-source ./utils/helpers/validation.sh
+source "${HOME}/engen/utils/helpers/validation.sh"
 
 # associative array of extensions
 # declare -A PERSONAL_EXTENSIONS_LIST
@@ -27,6 +27,10 @@ source ./utils/helpers/validation.sh
 # PERSONAL_EXTENSIONS_LIST["Rust"]="rust-lang.rust"
 # PERSONAL_EXTENSIONS_LIST["SpellCheck"]="timonwong.shellcheck"
 
+# TO ADD
+
+# Back & Forward Buttons - nick-rudenko.back-n-forth 
+
 EXTENSIONS_LIST_IDS=(
   azuretools.vscode-docker
   bungcip.better-toml
@@ -38,6 +42,7 @@ EXTENSIONS_LIST_IDS=(
   exodiusstudios.comment-anchors
   formulahendry.code-runner
   jetmartin.bats
+  ms-vsliveshare.vsliveshare
   mads-hartmann.bash-ide-vscode
   massi.javascript-docstrings
   matklad.rust-analyzer
@@ -74,6 +79,7 @@ EXTENSIONS_LIST_NAMES=(
   'Comment_Anchors'
   'Code_Runner'
   'Bash_Automated_Testing'
+  'Live Share'
   'Bash_IDE'
   'JavaScript_Docstrings'
   'Rust_Analyzer'
@@ -133,10 +139,10 @@ install_all_vscode_extensions() {
       continue
     else
       echo
-      echo "==================================================="
+      echo "========================================================================================="
       echo "Installing: ${EXTENSIONS_LIST_NAMES[i]}..."
       code --install-extension "${EXTENSIONS_LIST_IDS[i]}"
-      echo "==================================================="
+      echo "========================================================================================="
     fi
   done
 }
@@ -144,7 +150,10 @@ install_all_vscode_extensions() {
 choose_extenstions_to_install() {
   ALREADY_INSTALLED="false"
 
-  echo "////////////////////// EXTENSIONS THAT CAN BE INSTALLED //////////////////////"
+  echo "========================================================================================="
+  echo "================================ [--VS-CODE EXTENSIONS--]================================"
+  echo "========================================================================================="
+  echo
   # for key in ${!PERSONAL_EXTENSIONS_LIST[@]}; 
   # do 
   #   echo "$key => ${PERSONAL_EXTENSIONS_LIST[$key]}"; 
@@ -189,10 +198,10 @@ choose_extenstions_to_install() {
         for i in ${indexes[@]}
         do
           echo
-          echo "==================================================="
+          echo "========================================================================================="
           echo "Installing: ${EXTENSIONS_LIST_NAMES[i]}..."
           code --install-extension "${EXTENSIONS_LIST_IDS[i]}"
-          echo "==================================================="
+          echo "========================================================================================="
         done
       fi
       break
@@ -204,6 +213,7 @@ choose_extenstions_to_install() {
       read -r indexes
     fi
   done
+
 }
 
 # choose_extenstions_to_install

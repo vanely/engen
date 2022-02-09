@@ -1,64 +1,22 @@
 #!/bin/bash
 
+# spellcheck source=./programs-to-install/dependencies/dependencies.sh
+source "${HOME}/engen/programs-to-install/dependencies/dependencies.sh"
+
 ########################################################################################################
-############################################# DEPENDENCIES #############################################
+############################################### PROGRAMS ###############################################
 ########################################################################################################
-
-# snapd
-check_and_install_snapd_package_manager() {
-  echo "////////////////////// PREPARING TO INSTALL SNAP PACKAGE MANAGER //////////////////////"
-  if [[ -n "$(which snap)" ]] ; then
-    echo "Snap has already been installed"
-    echo "_________________________________________________________________________"
-    echo
-   else
-    echo "Installing Snap package manager"
-    echo "_________________________________________________________________________"
-    echo
-    sudo apt-get -y install snapd
-  fi
-}
-
-# make - does not need to be added to install list
-check_and_install_make() {
-  echo "////////////////////// PREPARING TO INSTALL MAKE //////////////////////"
-  if [[ -n "$(which make)" ]] ; then
-    echo "Make has already been installed"
-    echo "_________________________________________________________________________"
-    echo
-   else
-    echo "Installing make"
-    echo "_________________________________________________________________________"
-    echo
-    sudo apt-get -y install make
-  fi
-}
-
-#gcc - does not need to be added to install list
-check_and_install_gcc() {
-  echo "////////////////////// PREPARING TO INSTALL GCC //////////////////////"
-  if [[ -n "$(which gcc)" ]] ; then
-    echo "Gcc has already been installed"
-    echo "_________________________________________________________________________"
-    echo
-   else
-    echo "Installing gcc"
-    echo "_________________________________________________________________________"
-    echo
-    sudo apt-get -y install gcc
-  fi
-}
 
 # grub-customizer
 check_and_install_grub_customizer() {
-  echo "////////////////////// PREPARING TO INSTALL GRUB CUSTOMIZER //////////////////////"
+  echo "///////////////////////// PREPARING TO INSTALL GRUB CUSTOMIZER //////////////////////////"
   if [[ -n "$(which grub-customizer)" ]] ; then
     echo "Grub-customizer has already been installed"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
    else
     echo "Installing grub-customizer"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo add-apt-repository ppa:danielrichter2007/grub-customizer
     sudo apt update
@@ -66,31 +24,16 @@ check_and_install_grub_customizer() {
   fi
 }
 
-# curl
-check_and_install_curl() {
-  echo "////////////////////// PREPARING TO INSTALL CURL //////////////////////"
-  if [[ -n "$(which curl)" ]] ; then
-    echo "Curl has already been installed"
-    echo "_________________________________________________________________________"
-    echo
-   else
-    echo "Installing curl"
-    echo "_________________________________________________________________________"
-    echo
-    sudo apt-get -y install curl
-  fi
-}
-
 # htop
 check_and_install_htop() {
-  echo "////////////////////// PREPARING TO INSTALL HTOP //////////////////////"
+  echo "/////////////////////////////// PREPARING TO INSTALL HTOP ///////////////////////////////"
   if [[ -n "$(which htop)" ]] ; then
     echo "Htop has already been installed"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
    else
     echo "Installing htop"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt-get -y install htop
   fi
@@ -98,41 +41,16 @@ check_and_install_htop() {
 
 # tree graphically displays a dir tree
 check_and_install_tree() {
-  echo "////////////////////// PREPARING TO INSTALL TREE //////////////////////"
+  echo "/////////////////////////////// PREPARING TO INSTALL TREE ///////////////////////////////"
   if [[ -n "$(which tree)" ]] ; then
     echo "Tree has already been installed"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
    else
     echo "Installing tree"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt-get -y install tree
-  fi
-}
-
-########################################################################################################
-############################################### PROGRAMS ###############################################
-########################################################################################################
-
-# gh Github CLI(can create PRs, Repos, and other git flows without accessing website)
-# VERIFIED
-check_and_install_gh() {
-  check_and_install_curl
-  echo "////////////////////// PREPARING TO INSTALL GH(GITHUB CLI) //////////////////////"
-  if [[ -n $(gh --version) ]] ; then
-    echo "gh(github CLI) has already been installed."
-    echo "_________________________________________________________________________"
-    echo
-  else
-    echo "Installing gh(github CLI):"
-    echo "_________________________________________________________________________"
-    echo
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg ;
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null ;
-    sudo apt update ;
-    sudo apt install dirmngr ;
-    sudo apt install gh ;
   fi
 }
 
@@ -140,14 +58,14 @@ check_and_install_gh() {
 # VERIFIED
 check_and_install_rust() {
   check_and_install_curl
-  echo "////////////////////// PREPARING TO INSTALL RUST //////////////////////"
+  echo "/////////////////////////////// PREPARING TO INSTALL RUST ///////////////////////////////"
   if [[ -n $(rustc --version) ]] ; then
     echo "Rust lang has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Installing Rust lang:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # Update rust installation by running 'rustup update'
     # In the Rust development environment, all tools are installed to the ~/.cargo/bin directory, and this is where you will find the Rust toolchain, including rustc, cargo, and rustup.
@@ -174,26 +92,26 @@ check_and_install_rust() {
 # VERIFIED
 check_and_install_flutter_and_dart() {
   check_and_install_snapd_package_manager	
-  echo "////////////////////// PREPARING TO INSTALL FLUTTER AND DART //////////////////////"
+  echo "///////////////////////// PREPARING TO INSTALL FLUTTER AND DART /////////////////////////"
   if [[ -n "$(which flutter)"  ]] ; then
     echo "Flutter and Dart have already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
    echo "Installing Flutter and Dart dependencies:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt-get -y install clang cmake ninja-build pkg-config libgtk-3-dev
 
     echo
     echo "Installing Flutter and Dart:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo snap install flutter --classic
 
     # enable desktop support
     echo "Enabling Flutter and Dart desktop support:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     flutter config --enable-linux-desktop
 
@@ -205,14 +123,14 @@ check_and_install_flutter_and_dart() {
 # VERIFIED
 check_and_install_zsh() {
   check_and_install_curl
-  echo "////////////////////// PREPARING TO INSTALL ZSHELL //////////////////////"
+  echo "////////////////////////////// PREPARING TO INSTALL ZSHELL //////////////////////////////"
   if [[ -d ~/.oh-my-zsh ]] && [[ -f ~/.zshrc ]] ; then
     echo "Z-Shell has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Installing Z-Shell:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # this will install nvm with node and npm lts
     curl -sSL https://github.com/zthxxx/jovial/raw/master/installer.sh | sudo -E bash -s $USER ;
@@ -235,15 +153,15 @@ check_and_install_zsh() {
 check_and_install_theme.sh() {
   install_theme.sh() {
     echo "Installing Theme.sh:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     wget https://raw.githubusercontent.com/lemnos/theme.sh/master/bin/theme.sh -O /tmp/theme.sh
   }
 
-  echo "////////////////////// PREPARING TO INSTALL THEME.SH //////////////////////"
+  echo "///////////////////////////// PREPARING TO INSTALL THEME.SH /////////////////////////////"
   if [[ -n "$(theme.sh --version)" ]] && [[ -n "$(fzf --version)" ]] ; then
     echo "Theme.sh has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   elif [[ -z "$(theme.sh --version)" ]] && [[ -n "$(fzf --version)" ]] ; then
     install_theme.sh
@@ -259,14 +177,14 @@ check_and_install_space_vim() {
   check_and_install_curl
   check_and_install_make
   check_and_install_gcc
-  echo "////////////////////// PREPARING TO INSTALL SPACE VIM //////////////////////"
+  echo "///////////////////////////// PREPARING TO INSTALL SPACE VIM ////////////////////////////"
   if [[ -d  ~/.SpaceVim.d ]] ; then
     echo "Space vim has already been installed"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
    else
     echo "Installing  Space vim"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     curl -sLf https://spacevim.org/install.sh | bash
   fi
@@ -281,14 +199,14 @@ check_and_install_space_vim() {
 # vim
 # VERIFIED
 check_and_install_vim() {
-  echo "////////////////////// PREPARING TO INSTALL VIM //////////////////////"
+  echo "//////////////////////////////// PREPARING TO INSTALL VIM ///////////////////////////////"
   if [[ -n "$(which vim)" ]] ; then
     echo "Vim has already been installed"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
    else
     echo "Installing Vim"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt-get -y install vim
   fi
@@ -297,27 +215,27 @@ check_and_install_vim() {
 # vscode
 # VERIFIED
 check_and_install_vscode() {
-  echo "////////////////////// PREPARING TO INSTALL VSCODE //////////////////////"
+  echo "////////////////////////////// PREPARING TO INSTALL VSCODE //////////////////////////////"
   if [[ -n $(code --version) ]] ; then
     echo "Visual Studio Code has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Updating package index and install dependencies:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt update ;
     sudo apt install -y software-properties-common apt-transport-https wget ;
     echo "Importing repository GPG signing key:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add - ;
     echo "Enabling Visual Studio Code repository:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" ;
     echo "Installing Visual Studio Code:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt update ;
     sudo apt install -y code ;
@@ -328,14 +246,14 @@ check_and_install_vscode() {
 # VERIFIED
 check_and_install_insomnia() {
   check_and_install_snapd_package_manager
-  echo "////////////////////// PREPARING TO INSTALL INSOMNIA //////////////////////"
+  echo "///////////////////////////// PREPARING TO INSTALL INSOMNIA /////////////////////////////"
   if [[ -n $(which insomnia) ]] ; then
     echo "Insomnia has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo 
   else
     echo "Installing Insomnia:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # check updates for snap packages: sudo snap refresh --list
     sudo snap install insomnia ;
@@ -348,14 +266,14 @@ check_and_install_insomnia() {
 # VERIFIED
 check_and_install_postman() {
   check_and_install_snapd_package_manager
-  echo "////////////////////// PREPARING TO INSTALL POSTMAN //////////////////////"
+  echo "////////////////////////////// PREPARING TO INSTALL POSTMAN /////////////////////////////"
   if [[ -n $(which postman) ]] ; then
     echo "Postman has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo 
   else
     echo "Installing Postman:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # check updates for snap packages: sudo snap refresh --list
     sudo snap install postman ;
@@ -367,29 +285,29 @@ check_and_install_postman() {
 # mongodb
 # VERIFIED
 check_and_install_mongodb() {
-  echo "////////////////////// PREPARING TO INSTALL MONGODB //////////////////////"
+  echo "///////////////////////////// PREPARING TO INSTALL MONGODB //////////////////////////////"
   if [[ -n $(mongo --version) ]] ; then
     echo "MongoDB has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo 
   else
     # check updates for snap packages: sudo snap refresh --list
     echo "Updating package index and install dependencies:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt update ;
     if [[ -n $(which gpg) ]] ; then
       echo "Installing gnupg(GPG):"
-      echo "_________________________________________________________________________"
+      echo "_________________________________________________________________________________________"
       echo
       sudo apt-get install -y gnupg ;
     fi
     echo "Importing repository GPG signing key:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
     echo "Installing MongoDB:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt update ;
 		sudo apt-get install -y mongodb ;
@@ -423,23 +341,23 @@ check_and_install_mongodb() {
 # postgresql
 # VERIFIED
 check_and_install_postgresql() {
-  echo "////////////////////// PREPARING TO INSTALL POSTGRESQL //////////////////////"
+  echo "//////////////////////////// PREPARING TO INSTALL POSTGRESQL ////////////////////////////"
   if [[ -n $(psql --version) ]] ; then
     echo "PostgreSQL has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo 
   else
 
     echo "Creating file repository configuration:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     echo "Importing repository GPG signing key:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     echo "Installing PostgreSQL:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     sudo apt update ;
     # to install specific version, E.X.: sudo apt-get install postgresql-12
@@ -454,14 +372,14 @@ check_and_install_postgresql() {
 # VERIFIED
 check_and_install_robo3t() {
   check_and_install_snapd_package_manager
-  echo "////////////////////// PREPARING TO INSTALL ROBO-3T //////////////////////"
+  echo "////////////////////////////// PREPARING TO INSTALL ROBO-3T /////////////////////////////"
   if [[ -n $(which robo3t) ]] ; then
     echo "Robo3t has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Installing Robo3t:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # check updates for snap packages: sudo snap refresh --list
     sudo snap install robo3t-snap ;
@@ -516,14 +434,14 @@ check_and_install_robo3t() {
 # VERIFIED
 check_and_install_beekeeper_studio() {
   check_and_install_snapd_package_manager
-  echo "////////////////////// PREPARING TO INSTALL BEEKEEPER STUDIO //////////////////////"
+  echo "///////////////////////// PREPARING TO INSTALL BEEKEEPER STUDIO /////////////////////////"
   if [[ -n $(which beekeeper-studio) ]] ; then
     echo "Beekeeper Studio has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Installing Beekeeper Studio:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # check updates for snap packages: sudo snap refresh --list
     sudo snap install beekeeper-studio ;
@@ -545,21 +463,21 @@ check_and_install_google_chrome() {
     sudo apt install /opt/google/chrome/google-chrome-stable_current_amd64.deb 
   }
 
-  echo "////////////////////// PREPARING TO INSTALL GOOGLE CHROME //////////////////////"
+  echo "////////////////////////// PREPARING TO INSTALL GOOGLE CHROME ///////////////////////////"
   
   if [[ -n $(google-chrome-stable --version) ]] ; then
     echo "Google Chrome has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     if [[ -n $(which wget) ]] ; then
       echo "Installing Google Chrome:"
-      echo "_________________________________________________________________________"
+      echo "_________________________________________________________________________________________"
       echo
       install_google_chrome
     else
       echo "Installing wget and Google Chrome:"
-      echo "_________________________________________________________________________"
+      echo "_________________________________________________________________________________________"
       echo
       sudo apt install wget
       install_google_chrome
@@ -571,14 +489,14 @@ check_and_install_google_chrome() {
 # VERIFIED
 check_and_install_slack() {
   check_and_install_snapd_package_manager
-  echo "////////////////////// PREPARING TO INSTALL SLACK //////////////////////"
+  echo "/////////////////////////////// PREPARING TO INSTALL SLACK //////////////////////////////"
   if [[ -n $(which slack) ]] ; then
     echo "Slack has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Installing Slack:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # check updates for snap packages: sudo snap refresh --list
     sudo snap install slack --classic
@@ -590,14 +508,14 @@ check_and_install_slack() {
 # VERIFIED
 check_and_install_discord() {
   check_and_install_snapd_package_manager
-  echo "////////////////////// PREPARING TO INSTALL discord //////////////////////"
+  echo "////////////////////////////// PREPARING TO INSTALL discord /////////////////////////////"
   if [[ -n $(which discord) ]] ; then
     echo "Discord has already been installed."
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
   else
     echo "Installing Discord:"
-    echo "_________________________________________________________________________"
+    echo "_________________________________________________________________________________________"
     echo
     # check updates for snap packages: sudo snap refresh --list
     sudo snap install discord
@@ -607,7 +525,8 @@ check_and_install_discord() {
 
 # npm global packages
 install_global_npm_packages() {
-  echo "////////////////////// PREPARING TO GLOBALLY INSTALL NPM PACKAGES //////////////////////"
+  echo "////////////////////// PREPARING TO GLOBALLY INSTALL NPM PACKAGES ///////////////////////"
+  echo "NO GLOBAL PACKAGES SPECIFIED YET"
   # typescript tsc
   # serverless
   # aws-sdk
@@ -615,12 +534,9 @@ install_global_npm_packages() {
 
 # test these functions individually
 install_all_programs() {
-  check_and_install_snapd_package_manager ;
   check_and_install_grub_customizer ;
-  check_and_install_curl ;
   check_and_install_htop ;
   check_and_install_tree ; 
-  check_and_install_gh ;
   check_and_install_rust ;
   check_and_install_flutter_and_dart ;
   check_and_install_zsh ;
@@ -641,12 +557,9 @@ install_all_programs() {
 }
 
 FUNCTIONS_ARRAY=(
-  check_and_install_snapd_package_manager 
   check_and_install_grub_customizer
-  check_and_install_curl
   check_and_install_htop
   check_and_install_tree
-  check_and_install_gh
   check_and_install_rust
   check_and_install_flutter_and_dart
   check_and_install_zsh
@@ -667,12 +580,9 @@ FUNCTIONS_ARRAY=(
 )
 
 PROGRAM_NAMES_ARRAY=(
-  'Snap Package Manager'
   'Grub Customizer'
-  'Curl'
   'Htop(process manager)'
   'Tree(graphically displays dir tree)'
-  'Github CLI - gh(not Git)'
   'Rust Lang'
   'Flutter and Dart'
   'Zshell'

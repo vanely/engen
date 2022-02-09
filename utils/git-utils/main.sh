@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# spellcheck source=./utils/git-utils/git_update_repos.sh
-source ./utils/git-utils/git_update_repos.sh
-# spellcheck source=./utils/helpers/validation.sh
-source ./utils/helpers/validation.sh
-# spellcheck source=./utils/git-utils/git_utils.sh
-source ./utils/git-utils/git_utils.sh
+# spellcheck source="${HOME}/engen/utils/git-utils/git_update_repos.sh"
+source "${HOME}/engen/utils/git-utils/git_update_repos.sh"
+# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
+source "${HOME}/engen/utils/helpers/validation.sh"
+# spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh"
+source "${HOME}/engen/utils/git-utils/git_utils.sh"
 
 git_update() {
   choose_repos_to_status_or_update "update"
@@ -17,7 +17,7 @@ git_status() {
 
 create_git_repo() {
   echo
-  echo "==================================================="
+  echo "========================================================================================="
   echo "Signing into Github..."
   github_auth
   echo "Signed into Github."
@@ -65,12 +65,12 @@ create_git_repo() {
 
   echo "Signing out of Github..."
   github_deauth
-  echo "==================================================="
+  echo "========================================================================================="
 }
 
 delete_git_repo() {
   echo
-  echo "==================================================="
+  echo "========================================================================================="
   echo "Signing into Github..."
   github_auth
   echo "Signed into Github."
@@ -118,7 +118,7 @@ delete_git_repo() {
 
   echo "Signing out of Github..."
   github_deauth
-  echo "==================================================="
+  echo "========================================================================================="
 }
 
 GIT_UTILS_ARRAY=(
@@ -136,6 +136,10 @@ GIT_UTIL_OPTION_NAMES_ARRAY=(
 GIT_UTILS_ARRAY_LEN="${#GIT_UTILS_ARRAY[@]}"
 
 git_utils() {
+  echo "========================================================================================="
+  echo "================================== [--GIT UTILS--] ======================================"
+  echo "========================================================================================="
+  echo
   for (( i=0; i<"${GIT_UTILS_ARRAY_LEN}"; i++ ))
   do
     echo "${i}: ${GIT_UTIL_OPTION_NAMES_ARRAY[i]}"

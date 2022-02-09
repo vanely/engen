@@ -6,48 +6,52 @@ clone_git_repo() {
   GIT_REPO_TEMPLATE=""
   if [[ "${3}" == "private" ]] ; then
     # bypass auth "https://<username>:<password>@github.com/<username>/repo-name.git"
-    GIT_REPO_TEMPLATE="https://<user_name>:<personal_access_token>@github.com/<user_name>/${1}.git"
+    GIT_REPO_TEMPLATE="https://vanely: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@github.com/vanely/${1}.git"
   elif [[ "${3}" == "public" ]] || [[ -z "${3}" ]] ; then
-    GIT_REPO_TEMPLATE="https://github.com/<user_name>/${1}.git"
+    GIT_REPO_TEMPLATE="https://github.com/vanely/${1}.git"
   else
     echo "Inlavid access modifier(3rd argument: ${3})."
     echo "Use either: 'private' or 'public' or leave empty == public))"
     exit
   fi
   echo
-  echo "==================================================="
+  echo "========================================================================================="
   cd "${2}" || exit
   echo "Cloning ${GIT_REPO_TEMPLATE} into ${2}"
   git clone "${GIT_REPO_TEMPLATE}" .
-  echo "==================================================="
+  echo "========================================================================================="
 }
 
 # updates(pulls) git repos in their respective directories
 # arg1=DIRECTORY_NAME
 update_git_repo() {
   echo
-  echo "==================================================="
+  echo "========================================================================================="
   cd "${1}" || exit
   echo "Updating Local Repo: "
   echo "${1} ..."
   git pull
-  echo "==================================================="
+  echo "========================================================================================="
 }
 
 # runs git status on repos in their respective directories
 # arg1=DIRECTORY_NAME
 check_status_of_working_tree() {
   echo
-  echo "==================================================="
+  echo "========================================================================================="
   cd "${1}" || exit
   echo "Checking Local Repo Status: "
   echo "${1}..."
   git status
-  echo "==================================================="
+  echo "========================================================================================="
 }
 
 github_auth() {
-  gh auth login --with-token < ./utils/git-utils/tokenFile.txt
+  if [[ -f "/${HOME}/engen/utils/git-utils/tokenFile.txt" ]] ; then 
+    gh auth login --with-token < "/${HOME}/engen/utils/git-utils/tokenFile.txt"
+  else
+    gh auth login
+  fi
 }
 
 github_deauth() {

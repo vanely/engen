@@ -3,15 +3,17 @@
 # NOTE: the directories of the files being sourced should be expressed
 # relative to the directory of the root script that evetually calls it.
 
-# spellcheck source=./programs-to-install/linux/dev_tools_installs.sh
-source ./programs-to-install/linux/dev_tools_installs.sh
-# spellcheck source=./utils/helpers/validation.sh
-source ./utils/helpers/validation.sh
+# spellcheck source="${HOME}/engen/programs-to-install/linux/dev_tools_installs.sh"
+source "${HOME}/engen/programs-to-install/linux/dev_tools_installs.sh"
+# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
+source "${HOME}/engen/utils/helpers/validation.sh"
 
 PROGRAM_NAMES_ARRAY_LEN="${#PROGRAM_NAMES_ARRAY[@]}"
 
 iteratively_install_programs() {
-  echo "////////////////////// PROGRAMS THAT CAN BE INSTALLED //////////////////////"
+  echo "========================================================================================="
+  echo "============================= [--PROGRAMS TO INSTALL--]=================================="
+  echo "========================================================================================="
   echo
 
   echo "all: installs all programs"

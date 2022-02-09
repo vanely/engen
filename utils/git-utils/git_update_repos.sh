@@ -4,75 +4,146 @@
 # go through all git initialized repos and do a pull
 
 # spellcheck source=./env-creation/directories.sh
-source ./env-creation/directories.sh
-# spellcheck source=./utils/git-utils/git_utils.sh 
-source ./utils/git-utils/git_utils.sh 
-# spellcheck source=./utils/helpers/validation.sh
-source ./utils/helpers/validation.sh
+# source ./env-creation/directories.sh
+# spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh" 
+source "${HOME}/engen/utils/git-utils/git_utils.sh"
+# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
+source "${HOME}/engen/utils/helpers/validation.sh"
+
+# derive config file for current env
+get_current_config() {
+  local CURRENT_WORKING_TREE=$(pwd)
+  IFS="/" read -r -a DIR_LIST <<< ${CURRENT_WORKING_TREE}
+  local CURRENT_ROOT_ENV_CONFIG=""
+
+  if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then 
+    TEMP_CONFIG_REF="${HOME}/ROOT_ENV_CONFIG_${DIR_LIST[4]}.sh"
+    if [[ "$(config_file_exists "${TEMP_CONFIG_REF}")" == "true" ]] ; then
+      CURRENT_ROOT_ENV_CONFIG="${TEMP_CONFIG_REF}"
+      echo "${CURRENT_ROOT_ENV_CONFIG}"
+    else
+      echo "!e"
+    fi
+  else
+    TEMP_CONFIG_REF="${HOME}/ROOT_ENV_CONFIG_${DIR_LIST[3]}.sh"
+    if [[ "$(config_file_exists "${TEMP_CONFIG_REF}")" == "true" ]] ; then
+      CURRENT_ROOT_ENV_CONFIG="${TEMP_CONFIG_REF}"
+      echo "${CURRENT_ROOT_ENV_CONFIG}"
+    else
+      echo "!e"
+    fi
+  fi
+}
+
 
 update_all_dirs() {
-  for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
-  do
-    update_git_repo "${DIR_ARRAY[i]}"
-  done
+  local CURRENT_ROOT_ENV_CONFIG
+  CURRENT_ROOT_ENV_CONFIG="$(get_current_config)"
+
+  if [[ "${CURRENT_ROOT_ENV_CONFIG}" == "!e" ]] ; then
+    echo
+    echo "The expected config file: ${TEMP_CONFIG_REF}"
+    echo "does not exist"
+    echo
+    echo "Exiting..."
+    kill $$
+  else
+    source "${CURRENT_ROOT_ENV_CONFIG}"
+    local DIR_ARRAY_LEN="${#DIR_ARRAY[@]}"
+
+    for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
+    do
+      update_git_repo "${DIR_ARRAY[i]}"
+    done
+  fi
 }
 
 check_all_dirs_status() {
-  for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
-  do
-    check_status_of_working_tree "${DIR_ARRAY[i]}"
-  done
+  local CURRENT_ROOT_ENV_CONFIG
+  CURRENT_ROOT_ENV_CONFIG="$(get_current_config)"
+
+  if [[ "${CURRENT_ROOT_ENV_CONFIG}" == "!e" ]] ; then
+    echo
+    echo "The expected config file: ${TEMP_CONFIG_REF}"
+    echo "does not exist"
+    echo
+    echo "Exiting..."
+    kill $$
+  else
+    source "${CURRENT_ROOT_ENV_CONFIG}"
+    local DIR_ARRAY_LEN="${#DIR_ARRAY[@]}"
+
+    for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
+    do
+      check_status_of_working_tree "${DIR_ARRAY[i]}"
+    done
+  fi
 }
 
 # updates(pulls) or checks status of git repos in their respective directories
 # arg1=status || update
 choose_repos_to_status_or_update() {
-  echo "all"
-  for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
-  do
-    echo "${i}: ${DIR_NAMES_ARRAY[i]}"
-  done
+  local CURRENT_ROOT_ENV_CONFIG
+  CURRENT_ROOT_ENV_CONFIG="$(get_current_config)"
 
-  echo
-  echo "From the list above, select which repo you'd like to update"
-  echo "as 'all', or numbers separated by spaces. EX:"
-  echo "0 1 2"
-  echo
-  echo -n "> "
-  read -r indexes
+  if [[ "${CURRENT_ROOT_ENV_CONFIG}" == "!e" ]] ; then
+    echo
+    echo "The expected config file: ${TEMP_CONFIG_REF}"
+    echo "does not exist"
+    echo
+    echo "Exiting..."
+    kill $$
+  else
+    source "${CURRENT_ROOT_ENV_CONFIG}"
+    local DIR_ARRAY_LEN="${#DIR_ARRAY[@]}"
 
-  while "true"
-  do
-    if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
-      if [[ ${indexes} == 'all' ]] ; then
-        # invoke function to either update or check status based on arg1
-        if [[ ${1} == 'update' ]] ; then
-          update_all_dirs
-        elif [[ ${1} == 'status' ]] ; then
-          check_all_dirs_status
-        else
-          echo 'Invalid argument passed to "choose_repos_to_status_or_update"'
-        fi
-      else
-        for i in ${indexes[@]}
-        do
+    echo "all"
+    for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
+    do
+      echo "${i}: ${DIR_NAMES_ARRAY[i]}"
+    done
+
+    echo
+    echo "From the list above, select which repo you'd like to update"
+    echo "as 'all', or numbers separated by spaces. EX:"
+    echo "0 1 2"
+    echo
+    echo -n "> "
+    read -r indexes
+
+    while "true"
+    do
+      if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
+        if [[ ${indexes} == 'all' ]] ; then
           # invoke function to either update or check status based on arg1
           if [[ ${1} == 'update' ]] ; then
-            update_git_repo ${DIR_ARRAY[i]}
+            update_all_dirs
           elif [[ ${1} == 'status' ]] ; then
-            check_status_of_working_tree ${DIR_ARRAY[i]}
+            check_all_dirs_status
           else
             echo 'Invalid argument passed to "choose_repos_to_status_or_update"'
           fi
-        done
+        else
+          for i in ${indexes[@]}
+          do
+            # invoke function to either update or check status based on arg1
+            if [[ ${1} == 'update' ]] ; then
+              update_git_repo ${DIR_ARRAY[i]}
+            elif [[ ${1} == 'status' ]] ; then
+              check_status_of_working_tree ${DIR_ARRAY[i]}
+            else
+              echo 'Invalid argument passed to "choose_repos_to_status_or_update"'
+            fi
+          done
+        fi
+        break
+      else
+        echo
+        echo "Input must be a number in the above list, or 'all'"
+        echo
+        echo -n "> "
+        read -r indexes
       fi
-      break
-    else
-      echo
-      echo "Input must be a number in the above list, or 'all'"
-      echo
-      echo -n "> "
-      read -r indexes
-    fi
-  done
+    done
+  fi
 }   
