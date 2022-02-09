@@ -243,7 +243,7 @@ create_directories() {
   fi
 
   if [[ -f ~/.profile ]]; then
-    if [[ -z $(grep "alias engen='bash ~/engen/engen.sh'" ~/.profile) ]] ; then
+    if [[ -z $(grep "alias engen=" ~/.profile) ]] ; then
       echo 'alias engen="bash ~/engen/engen.sh"' >> ~/.profile
     fi
   fi

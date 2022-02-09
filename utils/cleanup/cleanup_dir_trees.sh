@@ -74,10 +74,9 @@ remove_all_dirs() {
 
 iteratively_remove_env_dirs() {
   echo "From the following list, select which env dir you'd like to remove"
-  echo "as 'all', or numbers separated by spaces. EX:"
+  echo "as numbers separated by spaces. EX:"
   echo "0 1 2"
   echo
-  echo "all: removes all dirs"
   # iteratively generate list of programs to install.
   for (( i=0; i<"${ENV_DIR_ARRAY_LEN}"; i++ ))
   do

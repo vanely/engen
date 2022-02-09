@@ -71,10 +71,14 @@ function engen() {
     echo "From the following list, select which env dir you'd like to access"
     echo
     # present list of existing dir trees.
-    for (( i=0; i<"${ENV_DIR_ARRAY_LEN}"; i++ ))
-    do
-      echo "${i}: ${ENV_DIR_NAMES[i]}"
-    done
+    if [[ "${ENV_DIR_ARRAY_LEN}" -ge 1 ]] ; then
+      for (( i=0; i<"${ENV_DIR_ARRAY_LEN}"; i++ ))
+      do
+        echo "${i}: ${ENV_DIR_NAMES[i]}"
+      done
+    else
+      echo "0: engen"
+    fi
     echo
     echo -n "> "
     read -r index
@@ -86,9 +90,22 @@ function engen() {
         # derive base dir name and pass as arg. main.sh is now accepting it
         # echo "Current env: ${ENV_DIR_NAMES[${index}]}"
         echo
-        cd "${HOME}/${ENV_DIR_NAMES[${index}]}"
-        bash "${HOME}/engen/main.sh" "${ENV_DIR_NAMES[${index}]}"
-        cd "${EXECUTION_DIR}"
+        if [[ "${ENV_DIR_ARRAY_LEN}" -ge 1 ]] ; then
+          cd "${HOME}/${ENV_DIR_NAMES[${index}]}"
+          bash "${HOME}/engen/main.sh" "${ENV_DIR_NAMES[${index}]}"
+          if [[ -d "${EXECUTION_DIR}" ]] ; then
+            cd "${EXECUTION_DIR}"
+          else
+            cd "${HOME}"
+          fi
+        else
+          bash "${HOME}/engen/main.sh"
+          if [[ -d "${EXECUTION_DIR}" ]] ; then
+            cd "${EXECUTION_DIR}"
+          else
+            cd "${HOME}"
+          fi
+        fi
         break
       else
         echo
