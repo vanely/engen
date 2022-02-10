@@ -95,7 +95,7 @@ input_validation() {
 repo_array() {
   REPO_LIST=$(gh repo list "<user_name>" --source)
   REPO_ARR=()
-  # gh repo list vanely --source
+  # gh repo list uesr_name --source
   for REPO in ${REPO_LIST}
   do
     IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}

@@ -8,6 +8,7 @@
 clone_git_repo() {
   # derive USER_NAME from .gitconfig
   if [[ ! -f ~/.gitconfig ]] ; then
+    echo
     echo "a global reference to your git config is needed to clone repos"
     echo "you'll need to run the following git commands"
     echo
@@ -15,6 +16,7 @@ clone_git_repo() {
     echo "git config --global user.email '<email>'"
     echo
     echo "replace everything inside of the single 'quotes' with your respective credentials"
+    echo
   else
     name=($(grep "name" ~/.gitconfig))
     USER_NAME="${name[2]}"
