@@ -5,11 +5,11 @@
 CURRENT_ROOT_ENV_OS="${ROOT_ENV_OS}"
 
 # The path to your generated directory tree, starting from the home directory
-CURRENT_BASE_DIR_PATH="/home/vanely/PracticeSpace"
+CURRENT_BASE_DIR_PATH="/home/vanely/Doop"
 
 # The name of the root directory for a generated directory tree
 # this is also the suffix for this files name
-CURRENT_BASE_DIR_NAME="PracticeSpace"
+CURRENT_BASE_DIR_NAME="Doop"
 
 # git credentials used to pull repos
 CURRENT_GIT_USER_NAME=
@@ -92,7 +92,7 @@ DIR_ARRAY=(
   "${JS_CHALLENGES}"                        
   "${PYTHON_CHALLENGES}"                    
   "${RUST_CHALLENGES}"                      
-  "${RUST_PRACTICE}/Course"        
+  "${RUST_PRACTICE}/Course"                 
   "${SCRIPTS_PRACTICE}/ShellScriptShCourse" 
   "${SCRIPTS_PRACTICE}/PowerShellCourse"    
   "${SCRIPTS_PROJECTS}/Private-engen"

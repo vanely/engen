@@ -3,46 +3,8 @@
 # spellcheck source=./programs-to-install/dependencies/dependencies.sh
 source "${HOME}/engen/programs-to-install/dependencies/dependencies.sh"
 
-# # check that git is installed, and version
-# check_and_install_git() {
-#   echo "////////////////////// PREPARING TO INSTALL GIT //////////////////////"
-#   if [[ -n "$(which git)" ]] ; then
-#     echo "Git has already been installed."
-#     echo "Current version: ${GIT_VERSION_ARRAY[2]}"
-#     echo "_________________________________________________________________________"
-#     echo
-#    else
-#     echo "Installing git"
-#     echo "_________________________________________________________________________"
-#     echo
-#     sudo apt-get -y install git
-#   fi
-# }
-
-# # check that gh github cli is installed
-# check_and_install_gh() {
-
-#   if [[ "${ROOT_ENV_OS}" == "" ]] ; then
-
-#   check_and_install_curl
-#   echo "////////////////////// PREPARING TO INSTALL GH(GITHUB CLI) //////////////////////"
-#   if [[ -n $(gh --version) ]] ; then
-#     echo "gh(github CLI) has already been installed."
-#     echo "_________________________________________________________________________"
-#     echo
-#   else
-#     echo "Installing gh(github CLI):"
-#     echo "_________________________________________________________________________"
-#     echo
-#     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg ;
-#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null ;
-#     sudo apt update ;
-#     sudo apt install dirmngr ;
-#     sudo apt install gh ;
-#   fi
-# }
-
 dependency_checks() {
+  check_and_install_git
   check_and_install_gh
   # echo
 }
@@ -63,17 +25,9 @@ check_and_install_gnome_keyring() {
 }
 
 # git credentials and authentication token setup
+# arg1=ROOT_ENV_CONFIG
 config_git_creds_and_auth() {
-  CURRENT_WORKING_TREE=$(pwd)
-  IFS="/" read -r -a DIR_LIST <<< ${CURRENT_WORKING_TREE}
-  CURRENT_ROOT_ENV_CONFIG=""
-  if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then 
-    CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${DIR_LIST[4]}"
-  else
-    CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${DIR_LIST[3]}"
-  fi
-
-  check_and_install_git
+  CURRENT_ROOT_ENV_CONFIG="${1}"
 
   GIT_USER=""
   GIT_EMAIL=""
@@ -113,14 +67,13 @@ config_git_creds_and_auth() {
 
   # check if ~/.gitconfig exists but name and email aren't inside, or
   # check if ~/.gitconfig doesn't exist
-  if [[ -f "${HOME}/.gitconfig" ]] && [[ -z $(grep "name = " ${HOME}/.gitconfig) ]] && [[ -z $(grep "email = " ${HOME}/.gitconfig) ]] || [[ ! -f "${HOME}/.gitconfig" ]]  ; then
-
+  if [[ ! -f "${HOME}/.gitconfig" ]]  ; then
     if [[ -f "${CURRENT_ROOT_ENV_CONFIG}.sh" ]] ; then
       echo "Attempting to extract git credentials from ROOT_ENV_CONFIG"
       echo
       source "${CURRENT_ROOT_ENV_CONFIG}.sh"
 
-      if [[ -n "${CURRENT_GIT_USER_NAME}" ]] && [[ "${CURRENT_GIT_EMAIL}" ]] ; then
+      if [[ -n "${CURRENT_GIT_USER_NAME}" ]] && [[ -n "${CURRENT_GIT_EMAIL}" ]] ; then
         GIT_USER="${CURRENT_GIT_USER_NAME}"
         GIT_EMAIL="${CURRENT_GIT_EMAIL}"
       else
@@ -132,6 +85,7 @@ config_git_creds_and_auth() {
       git config --global user.name "${GIT_USER}"
       git config --global user.email "${GIT_EMAIL}"
       git config --global credential.helper store
+      # git config --global credential.helper cache
     else
       echo
       # prompt user for git user_name and email
@@ -141,8 +95,8 @@ config_git_creds_and_auth() {
     git config --global user.name "${GIT_USER}"
     git config --global user.email "${GIT_EMAIL}"
     git config --global credential.helper store
+    # git config --global credential.helper cache
   fi
-  # git config --global credential.helper cache
 
   #  Only an issue on Linux do OS check here
   if [[ "${ROOT_ENV_OS}" == "Linux" ]] ; then

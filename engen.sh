@@ -9,6 +9,14 @@ DIR_NAME="${1}"
 function engen() {
   # reference to wear command is run from
   EXECUTION_DIR="$(pwd)"
+  return_to_execution_dir() {
+    if [[ -d "${EXECUTION_DIR}" ]] ; then
+      cd "${EXECUTION_DIR}"
+    else
+      cd "${HOME}"
+    fi
+  }
+
   # SIGINT fall back
   function leave_script() {
     cd "${EXECUTION_DIR}"
@@ -51,70 +59,58 @@ function engen() {
     ENV_DIR_NAMES=()
     ENV_DIR_PATHS=()
 
-    for ENV_VAR in ${ENV_DIR_ARRAY[@]}
-    do
-      IFS="=" read -r -a touple <<< ${ENV_VAR}
-      ENV_VAR_NAME_ARRAY+=("${touple[0]}")
-      ENV_DIR_PATHS+=("${touple[1]}")
-    done
-
-    for DIR_VAR_NAME in ${ENV_VAR_NAME_ARRAY[@]}
-    do
-      IFS="_" read -r -a name <<< ${DIR_VAR_NAME}
-      ENV_DIR_NAMES+=("${name[3]}")
-    done
-
-    echo "========================================================================================="
-    echo "=============================== [--ENV DIRECTORIES--]===================================="
-    echo "========================================================================================="
-    echo
-    echo "From the following list, select which env dir you'd like to access"
-    echo
-    # present list of existing dir trees.
     if [[ "${ENV_DIR_ARRAY_LEN}" -ge 1 ]] ; then
+      for ENV_VAR in ${ENV_DIR_ARRAY[@]}
+      do
+        IFS="=" read -r -a touple <<< ${ENV_VAR}
+        ENV_VAR_NAME_ARRAY+=("${touple[0]}")
+        ENV_DIR_PATHS+=("${touple[1]}")
+      done
+
+      for DIR_VAR_NAME in ${ENV_VAR_NAME_ARRAY[@]}
+      do
+        IFS="_" read -r -a name <<< ${DIR_VAR_NAME}
+        ENV_DIR_NAMES+=("${name[3]}")
+      done
+
+      echo "========================================================================================="
+      echo "=============================== [--ENV DIRECTORIES--]===================================="
+      echo "========================================================================================="
+      echo
+      echo "From the following list, select which env dir you'd like to access"
+      echo
+      # present list of existing dir trees.
       for (( i=0; i<"${ENV_DIR_ARRAY_LEN}"; i++ ))
       do
         echo "${i}: ${ENV_DIR_NAMES[i]}"
       done
-    else
-      echo "0: engen"
-    fi
-    echo
-    echo -n "> "
-    read -r index
+      echo
+      echo -n "> "
+      read -r index
 
-    # validate input
-    while "true"
-    do
-      if [[ "$(input_is_number "${index}")" == "true" ]] ; then
-        # derive base dir name and pass as arg. main.sh is now accepting it
-        # echo "Current env: ${ENV_DIR_NAMES[${index}]}"
-        echo
-        if [[ "${ENV_DIR_ARRAY_LEN}" -ge 1 ]] ; then
+      # validate input
+      while "true"
+      do
+        if [[ "$(input_is_number "${index}")" == "true" ]] ; then
+          # derive base dir name and pass as arg. main.sh is now accepting it
+          # echo "Current env: ${ENV_DIR_NAMES[${index}]}"
+          echo
           cd "${HOME}/${ENV_DIR_NAMES[${index}]}"
           bash "${HOME}/engen/main.sh" "${ENV_DIR_NAMES[${index}]}"
-          if [[ -d "${EXECUTION_DIR}" ]] ; then
-            cd "${EXECUTION_DIR}"
-          else
-            cd "${HOME}"
-          fi
+          return_to_execution_dir
+          break
         else
-          bash "${HOME}/engen/main.sh"
-          if [[ -d "${EXECUTION_DIR}" ]] ; then
-            cd "${EXECUTION_DIR}"
-          else
-            cd "${HOME}"
-          fi
+          echo
+          echo "Input must be a number in the above list"
+          echo
+          echo -n "> "
+          read -r index
         fi
-        break
-      else
-        echo
-        echo "Input must be a number in the above list"
-        echo
-        echo -n "> "
-        read -r index
-      fi
-    done
+      done
+    else
+      bash "${HOME}/engen/main.sh"
+      return_to_execution_dir
+    fi
   fi
 }
 

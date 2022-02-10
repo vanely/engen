@@ -58,7 +58,6 @@ set_base_directory_name() {
 
   check_current_operating_system
   check_and_update_bash
-  config_git_creds_and_auth
   dependency_checks
   echo "========================================================================================="
   echo "============================= [--EXISTING OR NEW CONFIG--] =============================="
@@ -94,6 +93,8 @@ set_base_directory_name() {
 
     EXISTING_CONFIG="${HOME}/ROOT_ENV_CONFIG_${EXISTING_CONFIG_SUFFIX}.sh"
     CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${EXISTING_CONFIG_SUFFIX}")"
+    # check git creds or prompt for them here
+    config_git_creds_and_auth
   elif [[ "${ENV_BOOL,,}" == "n" ]] ; then
     echo
     echo "========================================================================================="
@@ -167,7 +168,7 @@ create_directories() {
       BASE_DIR_ARRAY_LEN="${#BASE_DIR_ARRAY[@]}"
 
       echo "========================================================================================="
-      echo "========================== [--CREATING BASE DIRECTORIES--]==============================="
+      echo "============================ [--CREATING BASE DIRECTORIES--] ============================"
       echo "========================================================================================="
       echo
       # create base directories

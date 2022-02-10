@@ -26,52 +26,6 @@ do
 done
 
 # echo "${ENV_DIR_NAMES[@]}"
-
-# sed: stream editor(used to delete lines in files)
-check_and_install_sed() {
-  if [[ -n "$(which sed)" ]] ; then
-    echo "Sed has already been installed"
-    echo "_________________________________________________________________________________________"
-   else
-    echo "//////////////////////// PREPARING TO INSTALL SED(STREAM EDITOR) ////////////////////////"
-    echo "Installing sed(stream editor)"
-    echo "_________________________________________________________________________________________"
-    echo
-    sudo apt-get -y install sed
-  fi
-}
-
-remove_all_dirs() {
-  # check_and_install_sed
-  for (( i=0; i<"${ENV_DIR_ARRAY_LEN}"; i++ ))
-  do
-    # IS_ENV_VAR_IN_PROFILE="$(grep -wnq ${ENV_DIR_NAMES[i]} ~/.profile)"
-    # w: strict word search, n: output with line number
-    ENV_VAR_IN_PROFILE="$(grep -wn ${ENV_DIR_NAMES[i]} ~/.profile)"
-    # split by colon to get line number
-    IFS=":" read -r -a arr <<< ${ENV_VAR_IN_PROFILE}
-
-    # derive possible config file name
-    IFS="/" read -ra dirs_in_path <<< ${ENV_DIR_PATHS[i]}
-    local ROOT_ENV_DIR_PATH_NAME="${dirs_in_path[@]: -1:1}"
-    local CONFIG_FILE="ROOT_ENV_CONFIG_${ROOT_ENV_DIR_PATH_NAME}.sh"
-    # check if config file exists and and conditions below for deleting it too
-
-    # evaluates the string stored in the variable to its variable definition
-    if [[ -d "${ENV_DIR_PATHS[i]}" ]] &&  [[ -f "${CONFIG_FILE}" ]] && [[ -n ${ENV_VAR_IN_PROFILE} ]] ; then
-      # remove directory
-      rm -rf "${ENV_DIR_PATHS[i]}"
-      # remove config file. May not want to remove config file. User may want to keep this!
-      rm "${CONFIG_FILE}"
-      # remove env var by line number
-      sed -i "${arr[0]}d" ~/.profile
-    elif [[ ! -d "${ENV_DIR_PATHS[i]}" ]] && [[ -n ${ENV_VAR_IN_PROFILE} ]] ; then
-      # remove env var by line number
-      sed -i "${arr[0]}d" ~/.profile
-    fi
-  done
-}
-
 iteratively_remove_env_dirs() {
   echo "From the following list, select which env dir you'd like to remove"
   echo "as numbers separated by spaces. EX:"
@@ -88,48 +42,47 @@ iteratively_remove_env_dirs() {
 
   while "true"
   do
-    if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
-      if [[ ${indexes} == 'all' ]] ; then
-        remove_all_dirs
-      else
-        # check_and_install_sed
-        for i in ${indexes[@]}
-        do
-          # IS_ENV_VAR_IN_PROFILE="$(grep -wnq ${!ENV_DIR_NAMES[i]} ~/.profile)"
-          # w: strict word search, n: output with line number
-          ENV_VAR_IN_PROFILE="$(grep -wn ${ENV_DIR_NAMES[i]} ~/.profile)"
-          # split by colon to get line number
-          IFS=":" read -r -a arr <<< ${ENV_VAR_IN_PROFILE}
+    if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] ; then
+      for i in ${indexes[@]}
+      do
+        # IS_ENV_VAR_IN_PROFILE="$(grep -wnq ${!ENV_DIR_NAMES[i]} ~/.profile)"
+        # w: strict word search, n: output with line number
+        ENV_VAR_IN_PROFILE="$(grep -wn ${ENV_DIR_NAMES[i]} ~/.profile)"
+        # split by colon to get line number
+        IFS=":" read -r -a arr <<< ${ENV_VAR_IN_PROFILE}
 
-          # derive possible config file name
-          IFS="/" read -ra dirs_in_path <<< ${ENV_DIR_PATHS[i]}
-          local ROOT_ENV_DIR_PATH_NAME="${dirs_in_path[@]: -1:1}"
-          local CONFIG_FILE="${HOME}/ROOT_ENV_CONFIG_${ROOT_ENV_DIR_PATH_NAME}.sh"
+        # derive possible config file name
+        IFS="/" read -ra dirs_in_path <<< ${ENV_DIR_PATHS[i]}
+        local ROOT_ENV_DIR_PATH_NAME="${dirs_in_path[@]: -1:1}"
+        local CONFIG_FILE="${HOME}/ROOT_ENV_CONFIG_${ROOT_ENV_DIR_PATH_NAME}.sh"
 
-          # evaluates the string stored in the variable to its variable definition
-          if [[ -d "${ENV_DIR_PATHS[i]}" ]] && [[ -f "${CONFIG_FILE}" ]] && [[ -n ${ENV_VAR_IN_PROFILE} ]] ; then
-            echo
-            echo "========================================================================================="
-            echo "Removing: ${ENV_DIR_PATHS[i]}..."
-            # remove directory
-            rm -rf "${ENV_DIR_PATHS[i]}"
-            echo "Removing ${CONFIG_FILE}..."
-            # remove config file. May not want to remove config file. User may want to keep this!
+        # evaluates the string stored in the variable to its variable definition
+        if [[ -d "${ENV_DIR_PATHS[i]}" ]] ; then
+          echo
+          echo "========================================================================================="
+          echo "Removing: ${ENV_DIR_PATHS[i]}..."
+          # remove directory
+          rm -rf "${ENV_DIR_PATHS[i]}"
+          echo "Removing ${CONFIG_FILE}..."
+          # remove config file. May not want to remove config file. User may want to keep this!
+          if [[ -f "${CONFIG_FILE}" ]] ; then 
             rm "${CONFIG_FILE}"
             echo "Removing exported variable..."
-            # remove env var by line number
-            sed -i "${arr[0]}d" ~/.profile
-            echo "========================================================================================="
-          elif [[ ! -d "${ENV_DIR_PATHS[i]}" ]] && [[ -n ${ENV_VAR_IN_PROFILE} ]] ; then
-            echo
-            echo "========================================================================================="
-            echo "Removing exported variable for ${ENV_DIR_PATHS[i]}..."
-            # remove env var by line number
-            sed -i "${arr[0]}d" ~/.profile
-            echo "========================================================================================="
           fi
-        done
-      fi
+          # remove env var by line number
+          if [[ -n ${ENV_VAR_IN_PROFILE} ]] ; then
+            sed -i "${arr[0]}d" ~/.profile
+          fi 
+          echo "========================================================================================="
+        elif [[ ! -d "${ENV_DIR_PATHS[i]}" ]] && [[ -n ${ENV_VAR_IN_PROFILE} ]] ; then
+          echo
+          echo "========================================================================================="
+          echo "Removing exported variable for ${ENV_DIR_PATHS[i]}..."
+          # remove env var by line number
+          sed -i "${arr[0]}d" ~/.profile
+          echo "========================================================================================="
+        fi
+      done
       break
     else
       echo

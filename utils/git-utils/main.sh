@@ -7,12 +7,18 @@ source "${HOME}/engen/utils/helpers/validation.sh"
 # spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh"
 source "${HOME}/engen/utils/git-utils/git_utils.sh"
 
+#arg1=CONTEXT_ROOT_DIR_NAME
 git_update() {
-  choose_repos_to_status_or_update "update"
+  local CONTEXT_ROOT_DIR_NAME
+  CONTEXT_ROOT_DIR_NAME="${1}"
+  choose_repos_to_status_or_update "update" "${CONTEXT_ROOT_DIR_NAME}"
 }
 
+#arg1=CONTEXT_ROOT_DIR_NAME
 git_status() {
-  choose_repos_to_status_or_update "status"
+  local CONTEXT_ROOT_DIR_NAME
+  CONTEXT_ROOT_DIR_NAME="${1}"
+  choose_repos_to_status_or_update "status" "${CONTEXT_ROOT_DIR_NAME}"
 }
 
 create_git_repo() {
@@ -135,7 +141,12 @@ GIT_UTIL_OPTION_NAMES_ARRAY=(
 )
 GIT_UTILS_ARRAY_LEN="${#GIT_UTILS_ARRAY[@]}"
 
+# arg1=CONTEXT_ROOT_DIR_NAME
 git_utils() {
+  local CONTEXT_ROOT_DIR_NAME
+  CONTEXT_ROOT_DIR_NAME="${1}"
+  echo
+  echo "CONTEXT_ROOT_DIR_NAME: ${1}"
   echo "========================================================================================="
   echo "================================== [--GIT UTILS--] ======================================"
   echo "========================================================================================="
@@ -160,7 +171,11 @@ git_utils() {
       echo -n "> "
       read -r index
     else
-      ${GIT_UTILS_ARRAY[index]}
+      if [[ "${index}" == 0 ]] || [[ "${index}" == 1 ]] ; then
+        ${GIT_UTILS_ARRAY[index]} "${CONTEXT_ROOT_DIR_NAME}"
+      else
+        ${GIT_UTILS_ARRAY[index]}
+      fi
       break
     fi
   done

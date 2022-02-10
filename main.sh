@@ -20,9 +20,8 @@ source "${HOME}/engen/utils/helpers/vscode_extensions.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
 source "${HOME}/engen/utils/helpers/validation.sh"
 
-# script flags
-# won't be reached, move these help options
-FIRST_PARAM="${1}"
+# can either be 
+CONTEXT_ROOT_DIR_NAME="${1}"
 
 # similar to array of programs to install, present a choice of which main scripts to run
 # [x] create directory tree
@@ -45,7 +44,7 @@ FIRST_PARAM="${1}"
 update_current_dir_tree() {
   # CURRENT_WORKING_TREE=$(pwd)
   # IFS="/" read -r -a DIR_LIST <<< ${CURRENT_WORKING_TREE}
-  CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${FIRST_PARAM}.sh"
+  CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
   # echo "Current config file from main.sh: ${CURRENT_ROOT_ENV_CONFIG}"
   if [[ "$(config_file_exists "${CURRENT_ROOT_ENV_CONFIG}")" == "true" ]] ; then
     update_dir_tree "${CURRENT_ROOT_ENV_CONFIG}"
@@ -102,7 +101,13 @@ do
     echo -n "> "
     read -r process
   else
-    ${PROCESSES_ARRAY[process]}
+    # pass context down to each process and see if it gets properly consumed
+    # context needs to get to get to git_utils main.sh then to git_update_repos.sh 
+    if [[ "${process}" == "4" ]] ; then
+      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}"
+    else
+      ${PROCESSES_ARRAY[process]}
+    fi
     break
   fi
 done

@@ -1,25 +1,31 @@
 #!/bin/bash
 
+# pass config context as an arg to this script from main.sh(main will have the context as an optional arg. Account for this)
+
+
 # clone repos into their respective directories
-# arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into arg3=access("private" || ("public" || ""))
+# arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into
 clone_git_repo() {
-  GIT_REPO_TEMPLATE=""
-  if [[ "${3}" == "private" ]] ; then
-    # bypass auth "https://<username>:<password>@github.com/<username>/repo-name.git"
-    GIT_REPO_TEMPLATE="https://vanely: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@github.com/vanely/${1}.git"
-  elif [[ "${3}" == "public" ]] || [[ -z "${3}" ]] ; then
-    GIT_REPO_TEMPLATE="https://github.com/vanely/${1}.git"
+  # derive USER_NAME from .gitconfig
+  if [[ ! -f ~/.gitconfig ]] ; then
+    echo "a global reference to your git config is needed to clone repos"
+    echo "you'll need to run the following git commands"
+    echo
+    echo "git config --global user.name '<user_name>'"
+    echo "git config --global user.email '<email>'"
+    echo
+    echo "replace everything inside of the single 'quotes' with your respective credentials"
   else
-    echo "Inlavid access modifier(3rd argument: ${3})."
-    echo "Use either: 'private' or 'public' or leave empty == public))"
-    exit
+    name=($(grep "name" ~/.gitconfig))
+    USER_NAME="${name[2]}"
+    GIT_REPO_TEMPLATE="https://github.com/${USER_NAME}/${1}.git"
+    echo
+    echo "========================================================================================="
+    cd "${2}" || exit
+    echo "Cloning ${GIT_REPO_TEMPLATE} into ${2}"
+    git clone "${GIT_REPO_TEMPLATE}" .
+    echo "========================================================================================="
   fi
-  echo
-  echo "========================================================================================="
-  cd "${2}" || exit
-  echo "Cloning ${GIT_REPO_TEMPLATE} into ${2}"
-  git clone "${GIT_REPO_TEMPLATE}" .
-  echo "========================================================================================="
 }
 
 # updates(pulls) git repos in their respective directories

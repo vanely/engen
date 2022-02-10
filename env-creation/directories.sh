@@ -17,7 +17,7 @@ update_dir_tree() {
       # will have to consume from config file
       for (( i=0; i<"${DIR_ARR_LEN}"; i++ ))
       do
-        if [[ -d "${DIR_ARRAY[i]}" ]] ; then
+        if [[ -n "$(ls ${DIR_ARRAY[i]} 2> /dev/null)" ]] ; then
           echo "========================================================================================="
           echo "No update needed for: ${DIR_ARRAY[i]}"
           echo "========================================================================================="
@@ -30,11 +30,9 @@ update_dir_tree() {
           echo "${DIR_ARRAY[i]}"
           # -p flag allows for the crewation of nested dirs
           mkdir -p "${DIR_ARRAY[i]}"
-          # splits the corresponding project into the project=[0], and access=[1]
-          PROJECT_ARRAY_TOUPLE=(${CORRESPONDING_PROJECTS_ARRAY[i]})
           # connect repo to dir if there is one
           # cds into directories and clones repo (clone_git_repo GIT_REPO_NAME DIRECTORY_NAME access_mod(private || public || leave empty))
-          clone_git_repo "${PROJECT_ARRAY_TOUPLE[0]}" "${DIR_ARRAY[i]}" "${PROJECT_ARRAY_TOUPLE[1]}"
+          clone_git_repo "${CORRESPONDING_PROJECTS_ARRAY[i]}" "${DIR_ARRAY[i]}"
           echo "========================================================================================="
         fi
       done
