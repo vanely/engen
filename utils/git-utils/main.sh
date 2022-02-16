@@ -22,6 +22,9 @@ git_status() {
 }
 
 create_git_repo() {
+  name=($(grep "name" ~/.gitconfig))
+  GIT_USER="${name[2]}"
+
   echo
   echo "========================================================================================="
   echo "Signing into Github..."
@@ -29,45 +32,57 @@ create_git_repo() {
   echo "Signed into Github."
   echo
 
-  REPO_LIST=$(gh repo list vanely --source)
-  REPO_ARR=()
-  REPO_NAME_EXISTS="false"
-  # gh repo list vanely --source
-  for REPO in ${REPO_LIST}
-  do
-    IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
-    REPO_ARR+=(${REPO_TOUPLE[1]})
-  done
-
-  echo
-  echo -n "Repo Name > "
-  read -r new_repo_name
-
-  while "true"
-  do
-    for REPO_NAME in ${REPO_ARR[@]}
+  if [[ -n "${GIT_USER}" ]] ; then 
+    REPO_LIST=$(gh repo list "${GIT_USER}" --source)
+    REPO_ARR=()
+    REPO_NAME_EXISTS="false"
+    # gh repo list user_name --source
+    for REPO in ${REPO_LIST}
     do
-      if [[ "${REPO_NAME}" == "${new_repo_name}" ]] ; then
-        REPO_NAME_EXISTS="true"
-      fi
+      IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
+      REPO_ARR+=(${REPO_TOUPLE[1]})
     done
 
-    if [[ "${REPO_NAME_EXISTS}" == "true" ]] ; then
-      REPO_NAME_EXISTS="false"
-      echo 
-      echo "Repo: ${new_repo_name} already exists"
-      echo -n "Repo Name > "
-      read -r new_repo_name
-    else
-      echo
-      echo "Enter repo access level: 'public' or 'private'"
-      echo
-      echo -n "Repo Access Level > "
-      read -r repo_access_level
-      create_repo_with_gh_cli "${new_repo_name}" "${repo_access_level}"
-      break
-    fi
-  done
+    echo
+    echo -n "Repo Name > "
+    read -r new_repo_name
+
+    while "true"
+    do
+      for REPO_NAME in ${REPO_ARR[@]}
+      do
+        if [[ "${REPO_NAME}" == "${new_repo_name}" ]] ; then
+          REPO_NAME_EXISTS="true"
+        fi
+      done
+
+      if [[ "${REPO_NAME_EXISTS}" == "true" ]] ; then
+        REPO_NAME_EXISTS="false"
+        echo 
+        echo "Repo: ${new_repo_name} already exists"
+        echo -n "Repo Name > "
+        read -r new_repo_name
+      else
+        echo
+        echo "Enter repo access level: 'public' or 'private'"
+        echo
+        echo -n "Repo Access Level > "
+        read -r repo_access_level
+        create_repo_with_gh_cli "${new_repo_name}" "${repo_access_level}"
+        break
+      fi
+    done
+  else
+    echo
+    echo "a global reference to your git config is needed to create repos"
+    echo "you'll need to run the following git commands"
+    echo
+    echo "git config --global user.name '<user_name>'"
+    echo "git config --global user.email '<email>'"
+    echo
+    echo "replace everything inside of the single 'quotes' with your respective credentials"
+    echo
+  fi
 
   echo "Signing out of Github..."
   github_deauth
@@ -75,6 +90,9 @@ create_git_repo() {
 }
 
 delete_git_repo() {
+  name=($(grep "name" ~/.gitconfig))
+  GIT_USER="${name[2]}"
+  
   echo
   echo "========================================================================================="
   echo "Signing into Github..."
@@ -82,45 +100,57 @@ delete_git_repo() {
   echo "Signed into Github."
   echo
 
-  REPO_LIST=$(gh repo list vanely --source)
-  REPO_ARR=()
-  REPO_NAME_EXISTS="false"
-  # gh repo list vanely --source
-  for REPO in ${REPO_LIST}
-  do
-    IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
-    REPO_ARR+=(${REPO_TOUPLE[1]})
-  done
-  REPO_ARR_LEN="${#REPO_ARR[@]}"
+  if [[ -n "${GIT_USER}" ]] ; then
+    REPO_LIST=$(gh repo list "${GIT_USER}" --source)
+    REPO_ARR=()
+    REPO_NAME_EXISTS="false"
+    # gh repo list user_name --source
+    for REPO in ${REPO_LIST}
+    do
+      IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
+      REPO_ARR+=(${REPO_TOUPLE[1]})
+    done
+    REPO_ARR_LEN="${#REPO_ARR[@]}"
 
-  # generate list of existing repo names
-  for (( i=0; i<"${REPO_ARR_LEN}"; i++ ))
-  do
-    echo "${i}: ${REPO_ARR[i]}"
-  done
-  echo
-  echo "From the above list choose a repo to delete by its index"
-  echo "or as a list of space separated indexes. EX: 0 1 2"
-  echo
-  echo -n "> "
-  read -r indexes
+    # generate list of existing repo names
+    for (( i=0; i<"${REPO_ARR_LEN}"; i++ ))
+    do
+      echo "${i}: ${REPO_ARR[i]}"
+    done
+    echo
+    echo "From the above list choose a repo to delete by its index"
+    echo "or as a list of space separated indexes. EX: 0 1 2"
+    echo
+    echo -n "> "
+    read -r indexes
 
-  while "true"
-  do
-    if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] ; then
-      for i in ${indexes[@]}
-      do
-        delete_repo_with_gh_cli "${REPO_ARR[i]}"
-      done
-      break
-    else
-      echo
-      echo "Input must be a number in the above list, or 'all'"
-      echo
-      echo -n "> "
-      read -r indexes
-    fi
-  done
+    while "true"
+    do
+      if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] ; then
+        for i in ${indexes[@]}
+        do
+          delete_repo_with_gh_cli "${REPO_ARR[i]}"
+        done
+        break
+      else
+        echo
+        echo "Input must be a number in the above list, or 'all'"
+        echo
+        echo -n "> "
+        read -r indexes
+      fi
+    done
+  else
+    echo
+    echo "a global reference to your git config is needed to delete repos"
+    echo "you'll need to run the following git commands"
+    echo
+    echo "git config --global user.name '<user_name>'"
+    echo "git config --global user.email '<email>'"
+    echo
+    echo "replace everything inside of the single 'quotes' with your respective credentials"
+    echo
+  fi
 
   echo "Signing out of Github..."
   github_deauth
