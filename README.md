@@ -11,16 +11,12 @@ find where directories are being created. EX: `mkdir "${ROOT}"`.
 There are comments for how to use the `clone_git_repo` function inside of the
 `PublicEnvGenerator/utils/git-utils/git_utils.sh`
 
-!!NOTE!!: when the project is cloned and used to generate a directory tree, the scripts should 
-then after be run from the same project(fork of `PublicEnvGenerator`) but the one that get's cloned into the generated directory tree.
-The reason for this is, multiple directory trees can be generated, and each will have their own respective context in the file system
-that's derived by the location of the main project.
+!!NOTE!! When a directory tree is generated an alias `engen` is globally exported to a `.profile` file, and sourced in your `.bashrc`, or `.zshrc`
 
 ### Install Programs
 Add install functions to `PublicEnvGenerator/programs-to-install/` and put them in install arrays for their respective operating system<br/>
 Currently only supports linux installs.<br/>
 Support for Mac and Windows coming real soon! >=D
-
 
 ### Cleanup
 The scripts in here allow the user to remove previously generated directory trees, and installed programs.
@@ -37,7 +33,10 @@ You can also modify the `vscode_extensions.sh` file, which can be used to keep t
 You may however want to opt for syncing either, your microsoft, or github account to vscode to keep your settings, and extensions where ever you go.
 
 ### Steps To Execute
-The `main.sh` executable at the top level of PublicEnvGenerator will present the following choices
+To access the below menu:
+When the repo is first cloned execute the `main.sh` script at the top level of the engen directory. After generating the first directory tree `Create Directory Tree` 
+an alias `engen` will be globally exported to `.profile`, and sourced in `.bashrc`, and or `.zshrc`, which can be used after to access the same menu and allows the 
+choice of generated directory context.
 
 0: Create Directory Tree<br/>
 1: Update Directory Tree<br/>
