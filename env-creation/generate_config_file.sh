@@ -45,10 +45,12 @@ get_or_prompt_for_git_creds() {
 
 # arg1=ROOT_ENV_DIR_NAME 
 generate_config_file() {
+  # change to ".engenrc_${1}" omit the ".sh"
   CONFIG_FILE_NAME="ROOT_ENV_CONFIG_${1}.sh"
 
   # copy the template, and add the name of the new dir tree to it
   # paths here needs to also be relative to main.sh execution script
+  # copy ""./config-file-templates/.engenrc_template"
   cp ./config-file-templates/ROOT_ENV_CONFIG_template.sh "./config-file-templates/${CONFIG_FILE_NAME}"
 
   ROOT_ENV_DIR_PATH="${HOME}/${1}"

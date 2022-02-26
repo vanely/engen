@@ -91,6 +91,8 @@ set_base_directory_name() {
     read -r EXISTING_CONFIG_SUFFIX 
     echo
 
+    # change to ".engenrc_${EXISTING_CONFIG_SUFFIX}" omit the ".sh"
+    # use depth search to find config file "find $HOME -maxdepth 2 -type f | grep 'ROOT_ENV'"
     EXISTING_CONFIG="${HOME}/ROOT_ENV_CONFIG_${EXISTING_CONFIG_SUFFIX}.sh"
     CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${EXISTING_CONFIG_SUFFIX}")"
     # check git creds or prompt for them here
