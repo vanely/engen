@@ -5,6 +5,7 @@ source "${HOME}/engen/utils/helpers/validation.sh"
 
 # convert grep search output with ROOT_ENV_DIR prefix to array
 arr=()
+# file search
 if [[ -f ~/.profile ]] ; then
   arr=($(grep "ROOT_ENV_DIR" ~/.profile))
 fi
@@ -54,9 +55,11 @@ iteratively_remove_env_dirs() {
         # derive possible config file name
         IFS="/" read -ra dirs_in_path <<< ${ENV_DIR_PATHS[i]}
         local ROOT_ENV_DIR_PATH_NAME="${dirs_in_path[@]: -1:1}"
+        # build_config_file
         local CONFIG_FILE="${HOME}/ROOT_ENV_CONFIG_${ROOT_ENV_DIR_PATH_NAME}.sh"
 
         # evaluates the string stored in the variable to its variable definition
+        # file search
         if [[ -d "${ENV_DIR_PATHS[i]}" ]] ; then
           echo
           echo "========================================================================================="

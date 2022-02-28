@@ -44,8 +44,10 @@ CONTEXT_ROOT_DIR_NAME="${1}"
 update_current_dir_tree() {
   # CURRENT_WORKING_TREE=$(pwd)
   # IFS="/" read -r -a DIR_LIST <<< ${CURRENT_WORKING_TREE}
+  # build_config_file
   CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
   # echo "Current config file from main.sh: ${CURRENT_ROOT_ENV_CONFIG}"
+  # file search
   if [[ "$(config_file_exists "${CURRENT_ROOT_ENV_CONFIG}")" == "true" ]] ; then
     update_dir_tree "${CURRENT_ROOT_ENV_CONFIG}"
   else

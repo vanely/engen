@@ -22,9 +22,11 @@ EXISTING_CONFIG=""
 # export CURRENT_BASE_DIR dir to be referenced globally
 # arg1=CURRENT_BASE_DIR_NAME
 make_root_dir_global() {
+  # build_config_file
   current_env_dir="ROOT_ENV_DIR_${1}"
 
   # unknown bug with exported variable creation.
+  # file search
   if [[ -f ~/.profile ]] && [[ -n "$(grep ${current_env_dir} ~/.profile)" ]] ; then
     echo "Global path reference variable has already been exported for the directory tree!"
   else
@@ -40,7 +42,8 @@ make_root_dir_global() {
     echo source ~/.profile >> ~/.bashrc
     echo source ~/.profile >> ~/.zshrc
   fi
-
+  
+  # file search
   if [[ ! -f ~/.zshrc ]] ; then
     source ~/.bashrc
   else
@@ -93,6 +96,7 @@ set_base_directory_name() {
 
     # change to ".engenrc_${EXISTING_CONFIG_SUFFIX}" omit the ".sh"
     # use depth search to find config file "find $HOME -maxdepth 2 -type f | grep 'ROOT_ENV'"
+    # build_config_file
     EXISTING_CONFIG="${HOME}/ROOT_ENV_CONFIG_${EXISTING_CONFIG_SUFFIX}.sh"
     CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${EXISTING_CONFIG_SUFFIX}")"
     # check git creds or prompt for them here
@@ -118,6 +122,7 @@ set_base_directory_name() {
       CURRENT_BASE_DIR="$(readlink -m "${HOME}/"${BASE})"
     fi
 
+    # file search
     while [[ -d "${CURRENT_BASE_DIR}" ]]
     do
       echo
@@ -132,6 +137,7 @@ set_base_directory_name() {
         # using the below readlink command normalizes the dir path and prevents occassional double slash
         CURRENT_BASE_DIR="$(readlink -m "${HOME}/"PracticeSpace)"
         break
+        # file search
       elif [[ ! -d "${HOME}/${BASE}" ]] ; then
         # using the below readlink command normalizes the dir path and prevents occassional double slash
         CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${BASE}")"
@@ -140,7 +146,8 @@ set_base_directory_name() {
     done
 
     echo "Base dir has been set to: ${CURRENT_BASE_DIR}"
-
+    
+    # file search
     if [[ -f ~/.bashrc ]] && [[ -f ~/.profile ]] ; then
       make_root_dir_global "${BASE}"
     elif [[ -f ~/.bashrc ]] && [[ ! -f ~/.profile ]]; then
@@ -175,12 +182,14 @@ create_directories() {
       echo
       # create base directories
       if [[ -n "${CURRENT_BASE_DIR_PATH}" ]] ; then
+        # file search
         if [[ -d "${CURRENT_BASE_DIR_PATH}" ]] ; then
           echo "${CURRENT_BASE_DIR_PATH} already exists!"
         else
           if [[ "${2}" == "existing" ]]; then
             CURRENT_BASE_DIR="${CURRENT_BASE_DIR_PATH}"
 
+            # file search
             if [[ -f ~/.bashrc ]] && [[ -f ~/.profile ]] ; then
               # CURRENT_BASE_DIR_NAME referenced from config file
               make_root_dir_global "${CURRENT_BASE_DIR_NAME}"
@@ -245,6 +254,7 @@ create_directories() {
     echo "reference it again, incase you'd like to regenerate the same directory tree."
   fi
 
+  # file search
   if [[ -f ~/.profile ]]; then
     if [[ -z $(grep "alias engen=" ~/.profile) ]] ; then
       echo 'alias engen="bash ~/engen/engen.sh"' >> ~/.profile

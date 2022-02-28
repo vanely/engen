@@ -15,6 +15,7 @@ update_all_dirs() {
   local CURRENT_ROOT_ENV_CONFIG
   CURRENT_ROOT_ENV_CONFIG="${1}"
 
+  # file search
   if [[ ! -f "${CURRENT_ROOT_ENV_CONFIG}" ]] ; then
     echo
     echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"
@@ -38,6 +39,7 @@ check_all_dirs_status() {
   local CURRENT_ROOT_ENV_CONFIG
   CURRENT_ROOT_ENV_CONFIG="${1}"
 
+  # file search
   if [[ ! -f "${CURRENT_ROOT_ENV_CONFIG}" ]] ; then
     echo
     echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"
@@ -63,9 +65,11 @@ choose_repos_to_status_or_update() {
   CONTEXT_ROOT_DIR_NAME="${2}"
   local CURRENT_ROOT_ENV_CONFIG
   # once context arrives derive config file name here
+  # build_config_file
   CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
 
-
+  # REVIEW: BUG!
+  # file search
   if [[ "${CURRENT_ROOT_ENV_CONFIG}" == "!e" ]] ; then
     echo
     echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"

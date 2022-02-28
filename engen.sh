@@ -10,6 +10,7 @@ function engen() {
   # reference to wear command is run from
   EXECUTION_DIR="$(pwd)"
   return_to_execution_dir() {
+    # file search
     if [[ -d "${EXECUTION_DIR}" ]] ; then
       cd "${EXECUTION_DIR}"
     else
@@ -45,6 +46,7 @@ function engen() {
     echo
   else
     arr=()
+    # file search
     if [[ -f ~/.profile ]] ; then
       arr=($(grep "ROOT_ENV_DIR" ~/.profile))
     fi
@@ -108,6 +110,7 @@ function engen() {
         fi
       done
     else
+      # file search use depth search instead
       bash "${HOME}/engen/main.sh"
       return_to_execution_dir
     fi

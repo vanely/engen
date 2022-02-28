@@ -4,6 +4,7 @@ GIT_USER=""
 GIT_EMAIL=""
 
 get_or_prompt_for_git_creds() {
+  # file search
   if [[ -f ~/.gitconfig ]] ; then
     name=($(grep "name" ~/.gitconfig))
     email=($(grep "email" ~/.gitconfig))
@@ -66,6 +67,7 @@ generate_config_file() {
   sed -i s/CURRENT_BASE_DIR_NAME=/CURRENT_BASE_DIR_NAME="${1}"/ ./config-file-templates/"${CONFIG_FILE_NAME}"
 
   # move generated config to home dir
+  # file search
   if [[ -f "${HOME}/${CONFIG_FILE_NAME}" ]] ; then
     echo "${CONFIG_FILE_NAME} already exists in home directory"
   else

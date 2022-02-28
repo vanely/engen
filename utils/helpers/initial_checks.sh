@@ -67,6 +67,7 @@ config_git_creds_and_auth() {
 
   # check if ~/.gitconfig exists but name and email aren't inside, or
   # check if ~/.gitconfig doesn't exist
+  # file search
   if [[ ! -f "${HOME}/.gitconfig" ]]  ; then
     if [[ -f "${CURRENT_ROOT_ENV_CONFIG}.sh" ]] ; then
       echo "Attempting to extract git credentials from ROOT_ENV_CONFIG"
@@ -101,6 +102,7 @@ config_git_creds_and_auth() {
   #  Only an issue on Linux do OS check here
   if [[ "${ROOT_ENV_OS}" == "Linux" ]] ; then
     check_and_install_gnome_keyring
+    # file search
     if [[ ! -f ~/.xinitrc ]] ; then
       touch ~/.xinitrc
       
@@ -175,6 +177,7 @@ check_current_operating_system() {
   # check whether running Linux or Darwin
 
   # arg1=CURREN_OS
+  # file search
   export_ref_to_current_os() {
     if [[ -f ~/.bashrc ]] && [[ -f ~/.profile ]] ; then
       echo export "ROOT_ENV_OS='${1}'" >> ~/.profile
@@ -190,6 +193,7 @@ check_current_operating_system() {
     fi
   }
 
+  # file search
   if [[ -f ~/.profile ]] && [[ -z "$(grep ROOT_ENV_OS ~/.profile)" ]] ; then
     if [[ "${CURRENT_OS}" == "Darwin" ]] ; then
       # this is working on Darwin

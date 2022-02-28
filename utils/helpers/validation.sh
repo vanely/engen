@@ -54,6 +54,7 @@ profile_not_sourced() {
 
 # checks if config file exists for an existing directory tree
 # arg1=ROOT_ENV_CONFIG
+# file search may replace this
 config_file_exists() {
   if [[ -f "${1}" ]] ; then
     echo "true"

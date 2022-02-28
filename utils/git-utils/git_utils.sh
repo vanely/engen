@@ -7,6 +7,7 @@
 # arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into
 clone_git_repo() {
   # derive USER_NAME from .gitconfig
+  # file search
   if [[ ! -f ~/.gitconfig ]] ; then
     echo
     echo "a global reference to your git config is needed to clone repos"
@@ -55,6 +56,8 @@ check_status_of_working_tree() {
 }
 
 github_auth() {
+  # find some way to safely access sensitive token/ or remove
+  # file search
   if [[ -f "/${HOME}/engen/utils/git-utils/tokenFile.txt" ]] ; then 
     gh auth login --with-token < "/${HOME}/engen/utils/git-utils/tokenFile.txt"
   else
