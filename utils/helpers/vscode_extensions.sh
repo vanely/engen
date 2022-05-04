@@ -36,6 +36,7 @@ EXTENSIONS_LIST_IDS=(
   bungcip.better-toml
   christian-kohler.path-intellisense
   coenraads.bracket-pair-colorizer-2
+  cyberbiont.vscode-profiles
   dbaeumer.vscode-eslint
   eamodio.gitlens
   esbenp.prettier-vscode
@@ -73,6 +74,7 @@ EXTENSIONS_LIST_NAMES=(
   'Better_TOML'
   'Path_Intellisense'
   'Bracket_Pair_Colorizer_2'
+  'Extension_Profiles'
   'ESLint'
   'Git_Lens'
   'Prettier'
