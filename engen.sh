@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# spellcheck source=./utils/helpers/validation.sh
 # source ./utils/helpers/validation.sh
-source "/${HOME}/engen/utils/helpers/validation.sh"
+# spellcheck source=/${HOME}/engen/utils/helpers/validation.sh
+source "${HOME}/engen/utils/helpers/validation.sh"
+# spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
+source "${HOME}/engen/utils/helpers/helpers.sh"
 
 DIR_NAME="${1}"
 
@@ -10,7 +12,7 @@ function engen() {
   # reference to wear command is run from
   EXECUTION_DIR="$(pwd)"
   return_to_execution_dir() {
-    # file search
+    # file search(not needed, using pwd for current dir reference)
     if [[ -d "${EXECUTION_DIR}" ]] ; then
       cd "${EXECUTION_DIR}"
     else
@@ -47,7 +49,7 @@ function engen() {
   else
     arr=()
     # file search
-    if [[ -f ~/.profile ]] ; then
+    if [[ "$(file_or_directory_exists "${HOME}" .profile f)" == "true" ]] ; then
       arr=($(grep "ROOT_ENV_DIR" ~/.profile))
     fi
     # remove 'export' keyword in array

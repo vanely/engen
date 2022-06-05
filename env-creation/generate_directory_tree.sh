@@ -14,6 +14,8 @@ source "${HOME}/engen/utils/helpers/initial_checks.sh"
 source "${HOME}/engen/utils/helpers/validation.sh" 
 # spellcheck source="${HOME}/engen/utils/helpers/git_utils.sh"
 source "${HOME}/engen/utils/git-utils/git_utils.sh"
+# spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
+source "${HOME}/engen/utils/helpers/helpers.sh"
 
 # reference to existing config
 EXISTING_CONFIG=""
@@ -25,7 +27,7 @@ make_root_dir_global() {
   # build_config_file
   current_env_dir="ROOT_ENV_DIR_${1}"
 
-  # unknown bug with exported variable creation.
+  # unknown bug with exported variable creation(not real).
   # file search
   if [[ -f ~/.profile ]] && [[ -n "$(grep ${current_env_dir} ~/.profile)" ]] ; then
     echo "Global path reference variable has already been exported for the directory tree!"
@@ -166,6 +168,7 @@ set_base_directory_name() {
 # open source projects directories with project specific repos cloned inside
 
 create_directories() {
+  # add function that derives where the root project dir has been cloned, and strore reference(may not need)
   set_base_directory_name
 
   # arg1=CONFIG_FILE arg2=existing || new
