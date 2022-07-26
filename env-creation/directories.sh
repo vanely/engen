@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # LIST OF DIRECTORIES
-# source ""
+
 # find relative location of engen(depth search)
-# source "${}"
+source "${}"
 source "${HOME}/engen/utils/git-utils/git_utils.sh"
 
 CURRENT_WORKING_TREE=""

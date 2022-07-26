@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source "../helpers/helpers.sh"
 VERSION="$(git --version)"
 
 array_test() {
@@ -105,8 +106,6 @@ repo_array() {
   echo "${REPO_ARR[@]}"
 }
 
-repo_array
-
 config_file_test() {
   # NOTE: whenever referencing config file, always check if it exists
 
@@ -189,3 +188,8 @@ consume_arrays() {
 # array_two=( "array two part one" "array two part two" )
 
 # demo_multiple_arrays array_one array_two
+
+# find_relative_file() {
+echo $(print_file_system_search "${HOME}" "engen" "d")
+# }
+# find_relative_file
