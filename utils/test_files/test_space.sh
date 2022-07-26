@@ -1,6 +1,21 @@
 #!/bin/bash
 
-source "../helpers/helpers.sh"
+#arg1=location
+#arg2=search_token
+#arg3=f(file) or d(directory)"
+print_file_system_search() {
+  local location="${1}"
+  local search_token="${2}"
+  local type="${3}"
+
+  # doing strict search with "-w" passed into grep command
+  local search=($(find "${location}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
+  echo "${search}"
+}
+
+source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/helpers.sh
+
+# source "../helpers/helpers.sh"
 VERSION="$(git --version)"
 
 array_test() {
@@ -190,6 +205,8 @@ consume_arrays() {
 # demo_multiple_arrays array_one array_two
 
 # find_relative_file() {
-echo $(print_file_system_search "${HOME}" "engen" "d")
+print_file_system_search "${HOME}" "engen" "d"
 # }
 # find_relative_file
+
+# build_config_file "nUnU"

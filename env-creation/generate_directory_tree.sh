@@ -4,18 +4,47 @@
 # NOTE: the directories of the files being sourced should be expressed
 # relative to the directory of the root script that evetually calls it.
 
+# I want to import this as the means of searching for files and dirs
+# but need a reference to this function before using it to import
+# is there a better what to approach this???
+
+#arg1=location
+#arg2=search_token
+#arg3=f(file) or d(directory)"
+print_file_system_search() {
+  local location="${1}"
+  local search_token="${2}"
+  local type="${3}"
+
+  # doing strict search with "-w" passed into grep command
+  local search=($(find "${location}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
+  echo "${search}"
+}
+
+
 # spellcheck source="${HOME}/engen/env-creation/generate_config_file.sh"
-source "${HOME}/engen/env-creation/generate_config_file.sh"
+source "$(print_file_system_search "${HOME}" "engen" "d")"/env-creation/generate_config_file.sh
+# source "${HOME}/engen/env-creation/generate_config_file.sh"
+
 # spellcheck source="${HOME}/engen/env-creation/directories.sh"
-source "${HOME}/engen/env-creation/directories.sh"
+source "$(print_file_system_search "${HOME}" "engen" "d")"/env-creation/directories.sh
+# source "${HOME}/engen/env-creation/directories.sh"
+
 # spellcheck source="${HOME}/engen/utils/helpers/initial_checks.sh"
-source "${HOME}/engen/utils/helpers/initial_checks.sh"
+source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/initial_checks.sh
+# source "${HOME}/engen/utils/helpers/initial_checks.sh"
+
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${HOME}/engen/utils/helpers/validation.sh" 
+source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/validation.sh
+# source "${HOME}/engen/utils/helpers/validation.sh" 
+
 # spellcheck source="${HOME}/engen/utils/helpers/git_utils.sh"
-source "${HOME}/engen/utils/git-utils/git_utils.sh"
+source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/git_utils.sh
+# source "${HOME}/engen/utils/git-utils/git_utils.sh"
+
 # spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
-source "${HOME}/engen/utils/helpers/helpers.sh"
+source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/helpers.sh
+# source "${HOME}/engen/utils/helpers/helpers.sh"
 
 # reference to existing config
 EXISTING_CONFIG=""
@@ -27,7 +56,6 @@ make_root_dir_global() {
   # build_config_file
   current_env_dir="ROOT_ENV_DIR_${1}"
 
-  # unknown bug with exported variable creation(not real).
   # file search
   if [[ -f ~/.profile ]] && [[ -n "$(grep ${current_env_dir} ~/.profile)" ]] ; then
     echo "Global path reference variable has already been exported for the directory tree!"
@@ -99,7 +127,8 @@ set_base_directory_name() {
     # change to ".engenrc_${EXISTING_CONFIG_SUFFIX}" omit the ".sh"
     # use depth search to find config file "find $HOME -maxdepth 2 -type f | grep 'ROOT_ENV'"
     # build_config_file
-    EXISTING_CONFIG="${HOME}/ROOT_ENV_CONFIG_${EXISTING_CONFIG_SUFFIX}.sh"
+    EXISTING_CONFIG="$(print_file_system_search "${HOME}" ".engenrc_${EXISTING_CONFIG_SUFFIX}" "f")"
+    # EXISTING_CONFIG="${HOME}/ROOT_ENV_CONFIG_${EXISTING_CONFIG_SUFFIX}.sh"
     CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${EXISTING_CONFIG_SUFFIX}")"
     # check git creds or prompt for them here
     config_git_creds_and_auth

@@ -9,7 +9,7 @@ print_file_system_search() {
   local type="${3}"
 
   # doing strict search with "-w" passed into grep command
-  local search=($(find "${location}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
+  local search=($(find "${location}" -maxdepth 2 -type "${type}" | grep "${search_token}"))
   echo "${search}"
 }
 
