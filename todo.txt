@@ -1,0 +1,4 @@
+adding relative paths(this will be similar to the work done on depth search)
+[] pass a variable from the main script that is a reference to pwd
+  - this will store a path trace from home to engen
+  - this can then be used for all imports, with relative paths
