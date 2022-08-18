@@ -275,7 +275,7 @@ create_directories() {
     echo
     IFS="/" read -r -a DIR_NAMES <<< ${CURRENT_BASE_DIR}
     BASE_DIR_NAME=""
-    if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then 
+    if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then
       BASE_DIR_NAME="${DIR_NAMES[4]}"
     else
       BASE_DIR_NAME="${DIR_NAMES[3]}"
