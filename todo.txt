@@ -2,3 +2,12 @@ adding relative paths(this will be similar to the work done on depth search)
 [] pass a variable from the main script that is a reference to pwd
   - this will store a path trace from home to engen
   - this can then be used for all imports, with relative paths
+
+
+[] use reference to pwd for relative imports and for pointint to where main, and engen are in the
+file system.
+  - 2 first entry points are main(when env generation is being done for the first time) and engen(after main has been run)
+  - in both entry points, import function from helpers file that will allow engen to be found in file system
+  - this function will run pwd and can potentially take an argument that decides where the slicing of the pwd path output ends
+  - pass this reference down through the scripts that are invoked after similar to component props that are being passed down alreday
+  

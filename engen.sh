@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # source ./utils/helpers/validation.sh
-# spellcheck source=/${HOME}/engen/utils/helpers/validation.sh
-source "${HOME}/engen/utils/helpers/validation.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
 source "${HOME}/engen/utils/helpers/helpers.sh"
+# spellcheck source=/${HOME}/engen/utils/helpers/validation.sh
+source "${HOME}/engen/utils/helpers/validation.sh"
 
 DIR_NAME="${1}"
 

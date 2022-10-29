@@ -2,18 +2,18 @@
 
 # I want to import this as the means of searching for files and dirs
 # but need a reference to this function before using it to import
-# is there a better what to approach this???
+# is there a better what to approach this??? Can I just use a reference to pwd
 
-#arg1=location
+#arg1=beginning of search
 #arg2=search_token
 #arg3=f(file) or d(directory)"
-print_file_system_search() {
-  local location="${1}"
+print_file_system_search() { 
+  local beginning_of_search="${1}"
   local search_token="${2}"
   local type="${3}"
 
   # doing strict search with "-w" passed into grep command
-  local search=($(find "${location}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
+  local search=($(find "${beginning_of_search}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
   echo "${search}"
 }
 

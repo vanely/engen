@@ -31,6 +31,26 @@ build_config_file() {
   echo ".engenrc_${root_dir_name}"
 }
 
+#arg1=execution_context(main || engen)
+find_path_to_engen() {
+  local execution_context="${1}"
+  local ref_to_pwd=$(pwd)
+  local final_path="/"
+  echo "pwd: [ ${ref_to_pwd} ]"
+  IFS="/" read -r -a path_to_engen <<< ${ref_to_pwd}
+  echo "path dirs array: [ ${path_to_engen[@]} ]"
+
+  for dir in ${path_to_engen[@]}
+  do
+    if [[ "${dir}" == "engen" ]] ; then
+      final_path+="${dir}/"
+      break
+    fi
+    final_path+="${dir}/"
+  done
+  echo "final path: [ ${final_path} ]"
+}
+
 # will to convert find to array to get first output
 # file_search_arr=$(print_file_system_search "${HOME}" "engen" "d")
 # file_search_arr=$(print_file_system_search "${HOME}" ".profile" "f")
