@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# source ./utils/helpers/validation.sh
-# spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
-source "${HOME}/engen/utils/helpers/helpers.sh"
-# spellcheck source=/${HOME}/engen/utils/helpers/validation.sh
-source "${HOME}/engen/utils/helpers/validation.sh"
-
 DIR_NAME="${1}"
 
 function get_engen_fs_location() {
@@ -17,8 +11,15 @@ function get_engen_fs_location() {
   fi
 }
 
+# source ./utils/helpers/validation.sh
+# spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
+source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
+# spellcheck source=/${HOME}/engen/utils/helpers/validation.sh
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+
 function engen() {
   # reference to wear command is run from
+  local EXECUTION_DIR
   EXECUTION_DIR="$(pwd)"
   return_to_execution_dir() {
     # file search(not needed, using pwd for current dir reference)
@@ -56,21 +57,21 @@ function engen() {
     echo "The '5' option will"
     echo
   else
-    arr=()
+    local arr=()
     # file search
     if [[ "$(file_or_directory_exists "${HOME}" .profile f)" == "true" ]] ; then
       arr=($(grep "ROOT_ENV_DIR" ~/.profile))
     fi
     # remove 'export' keyword in array
-    no_exports_arr=( "${arr[@]/export/}" )
+    local no_exports_arr=( "${arr[@]/export/}" )
     # flatten empty spaces out of array
-    ENV_DIR_ARRAY=(${no_exports_arr[@]})
+    local ENV_DIR_ARRAY=(${no_exports_arr[@]})
     # get array length
-    ENV_DIR_ARRAY_LEN="${#ENV_DIR_ARRAY[@]}"
+    local ENV_DIR_ARRAY_LEN="${#ENV_DIR_ARRAY[@]}"
     # array of just ENV_DIR_NAMES
-    ENV_VAR_NAME_ARRAY=()
-    ENV_DIR_NAMES=()
-    ENV_DIR_PATHS=()
+    local ENV_VAR_NAME_ARRAY=()
+    local ENV_DIR_NAMES=()
+    local ENV_DIR_PATHS=()
 
     if [[ "${ENV_DIR_ARRAY_LEN}" -ge 1 ]] ; then
       for ENV_VAR in ${ENV_DIR_ARRAY[@]}

@@ -15,7 +15,7 @@ print_file_system_search() {
 
 #arg1=location
 #arg2=search_token
-#arg3=f(file) or d(directory)"
+#arg3=f(file) || d(directory)"
 file_or_directory_exists() {
   local search=$(print_file_system_search "${1}" "${2}" "${3}")
   if [[ -n "${search}" ]] ; then

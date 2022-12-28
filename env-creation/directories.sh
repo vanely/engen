@@ -1,32 +1,26 @@
 #!/bin/bash
 
-# I want to import this as the means of searching for files and dirs
-# but need a reference to this function before using it to import
-# is there a better what to approach this??? Can I just use a reference to pwd
-
-#arg1=beginning of search
-#arg2=search_token
-#arg3=f(file) or d(directory)"
-print_file_system_search() { 
-  local beginning_of_search="${1}"
-  local search_token="${2}"
-  local type="${3}"
-
-  # doing strict search with "-w" passed into grep command
-  local search=($(find "${beginning_of_search}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
-  echo "${search}"
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+    echo "$(pwd)"
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
 }
 
 # find relative location of engen(depth search)
-source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/git-utils/git_utils.sh
+source "$(get_engen_fs_location)/utils/git-utils/git_utils.sh"
 # source "${HOME}/engen/utils/git-utils/git_utils.sh"
 
-CURRENT_WORKING_TREE=""
-
 # arg1=PATH_TO_CONFIG
+# arg2=REF_TO_FS_LOCATION
 update_dir_tree() {
   # import config file
   source "${1}"
+
+  local REF_TO_FS_LOCATION
+  REF_TO_FS_LOCATION="${2}"
 
   if [[ -f "${1}" ]] ; then
 

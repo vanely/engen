@@ -8,8 +8,9 @@ adding relative paths(this will be similar to the work done on depth search)
 
 files updated with "get_engen_fs_location" and "build_config_file"
 - env-creation
-  - [] directories.sh
+  - [x] directories.sh
   - [] generate_config_file.sh
+    - finish updating new template format for generated config files
   - [] generate_directory_tree.sh
     - at bottom when exporting "engen" command, also "export ENGEN_FS_LOCATION" in ".profile"
 - programs-to-install
@@ -25,12 +26,13 @@ files updated with "get_engen_fs_location" and "build_config_file"
   - git-utils
     - [] git_update_repos.sh
     - [] git_utils.sh
-    - [] main.sh
+    - [x] main.sh
   - helpers
     - [] initial_checks.sh
     - [] vscode_extensions.sh
 - [x] main.sh
-- [] engen.sh
+- [x] engen.sh
+- [] once all files have been updated, manually smoke test the creation and updating of env using "./main.sh" and "engen" command
 
 
 
@@ -47,8 +49,11 @@ file system.
   - unzip awscliv2.zip
   - udo ./aws/install
 
-[] change the way programs are being checkec if they are installed or not. 
+[] change the way programs are being checked if they are installed or not. 
   - Instead of "which" use the actual version of the program "EX: <program name> --version" to check if a program is installed
   - Some operating systems consider the negative output of "which" to be a non 0 length string. So we can properly confirm if 
   - an application is installed or not. Change this for all use cases of which.
   - spellcheck source=./programs-to-install/dependencies/dependencies.sh
+
+[] update the help options when -h or --help are passed to the engen command
+[] check that the structure of the new linux mint instance has the correct crds in the .gitconfig file in home dir

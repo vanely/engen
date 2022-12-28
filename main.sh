@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# so far it seems like or imports, I have to add this function at the top of every file
+# is it then worth it to pass this reference to the below scripts
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
     echo "$(pwd)"
@@ -8,10 +10,6 @@ function get_engen_fs_location() {
     echo ENGEN_FS_LOCATION
   fi
 }
-
-# optional script arg1=ROOT_ENV_DIR_NAME 
-# NOTE: the directories of the files being sourced should be expressed
-# relative to the directory of the root script that evetually calls it.
 
 # spellcheck source="$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
 source "$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
@@ -51,19 +49,19 @@ CONTEXT_ROOT_DIR_NAME="${1}"
 #   - [x] remove directory tree,
 #   - [] remove all
 
+# arg1=REF_TO_FS_LOCATION
 update_current_dir_tree() {
-  # CURRENT_WORKING_TREE=$(pwd)
-  # IFS="/" read -r -a DIR_LIST <<< ${CURRENT_WORKING_TREE}
-  
-  # build_config_file
-  # will stay referenced this way! configs will be saved to $HOME!!!
-  # CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
+  local CURRENT_ROOT_ENV_CONFIG
+  local REF_TO_FS_LOCATION
   CURRENT_ROOT_ENV_CONFIG="${HOME}/$(build_config_file CONTEXT_ROOT_DIR_NAME)"
+  REF_TO_FS_LOCATION="${1}"
+  
+
   # DEBUG: outputting the constructed config file to make sure it's in correct format
   echo "Current config file from main.sh: ${CURRENT_ROOT_ENV_CONFIG}"
   # file search
   if [[ "$(config_file_exists "${CURRENT_ROOT_ENV_CONFIG}")" == "true" ]] ; then
-    update_dir_tree "${CURRENT_ROOT_ENV_CONFIG}"
+    update_dir_tree "${CURRENT_ROOT_ENV_CONFIG}" "${REF_TO_FS_LOCATION}"
   else
     echo
     echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"

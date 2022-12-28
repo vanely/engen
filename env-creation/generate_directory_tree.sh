@@ -1,27 +1,5 @@
 #!/bin/bash
 
-# imports
-# NOTE: the directories of the files being sourced should be expressed
-# relative to the directory of the root script that evetually calls it.
-
-# I want to import this as the means of searching for files and dirs
-# but need a reference to this function before using it to import
-# is there a better what to approach this???
-
-#arg1=location
-#arg2=search_token
-#arg3=f(file) or d(directory)"
-print_file_system_search() { # replace all of this for ref to pwd or export ENGEN_FS_LOCATION from main.sh
-  local location="${1}"
-  local search_token="${2}"
-  local type="${3}"
-
-  # doing strict search with "-w" passed into grep command
-  local search=($(find "${location}" -maxdepth 2 -type "${type}" | grep -w "${search_token}"))
-  echo "${search}"
-}
-
-
 # spellcheck source="${HOME}/engen/env-creation/generate_config_file.sh"
 source "$(print_file_system_search "${HOME}" "engen" "d")"/env-creation/generate_config_file.sh
 # source "${HOME}/engen/env-creation/generate_config_file.sh"

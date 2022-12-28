@@ -1,11 +1,20 @@
 #!/bin/bash
 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+    echo "$(pwd)"
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
+
 # spellcheck source="${HOME}/engen/utils/git-utils/git_update_repos.sh"
-source "${HOME}/engen/utils/git-utils/git_update_repos.sh"
+source "$(get_engen_fs_location)/utils/git-utils/git_update_repos.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${HOME}/engen/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
 # spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh"
-source "${HOME}/engen/utils/git-utils/git_utils.sh"
+source "$(get_engen_fs_location)/utils/git-utils/git_utils.sh"
 
 #arg1=CONTEXT_ROOT_DIR_NAME
 git_update() {
@@ -22,8 +31,10 @@ git_status() {
 }
 
 create_git_repo() {
-  name=($(grep "name" ~/.gitconfig))
+  local name
+  local GIT_USER
   GIT_USER="${name[2]}"
+  name=($(grep "name" ~/.gitconfig))
 
   echo
   echo "========================================================================================="
@@ -33,9 +44,13 @@ create_git_repo() {
   echo
 
   if [[ -n "${GIT_USER}" ]] ; then 
+    local REPO_LIST
+    local REPO_ARR
+    local REPO_NAME_EXISTS
     REPO_LIST=$(gh repo list "${GIT_USER}" --source)
     REPO_ARR=()
     REPO_NAME_EXISTS="false"
+
     # gh repo list user_name --source
     for REPO in ${REPO_LIST}
     do
@@ -90,6 +105,8 @@ create_git_repo() {
 }
 
 delete_git_repo() {
+  local name
+  local GIT_USER
   name=($(grep "name" ~/.gitconfig))
   GIT_USER="${name[2]}"
   
@@ -101,15 +118,20 @@ delete_git_repo() {
   echo
 
   if [[ -n "${GIT_USER}" ]] ; then
+    local REPO_LIST
+    local REPO_ARR
+    local REPO_NAME_EXISTS
     REPO_LIST=$(gh repo list "${GIT_USER}" --source)
     REPO_ARR=()
     REPO_NAME_EXISTS="false"
+
     # gh repo list user_name --source
     for REPO in ${REPO_LIST}
     do
       IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
       REPO_ARR+=(${REPO_TOUPLE[1]})
     done
+    local REPO_ARR_LEN
     REPO_ARR_LEN="${#REPO_ARR[@]}"
 
     # generate list of existing repo names
@@ -172,9 +194,13 @@ GIT_UTIL_OPTION_NAMES_ARRAY=(
 GIT_UTILS_ARRAY_LEN="${#GIT_UTILS_ARRAY[@]}"
 
 # arg1=CONTEXT_ROOT_DIR_NAME
+# arg2=REF_TO_FS_LOCATION
 git_utils() {
   local CONTEXT_ROOT_DIR_NAME
+  local REF_TO_FS_LOCATION
   CONTEXT_ROOT_DIR_NAME="${1}"
+  REF_TO_FS_LOCATION="${2}"
+
   echo
   echo "CONTEXT_ROOT_DIR_NAME: ${1}"
   echo "========================================================================================="
