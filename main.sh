@@ -1,24 +1,34 @@
 #!/bin/bash
 
-# optional script arg1=ROOT_ENV_DIR_NAME 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+    echo "$(pwd)"
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
 
+# optional script arg1=ROOT_ENV_DIR_NAME 
 # NOTE: the directories of the files being sourced should be expressed
 # relative to the directory of the root script that evetually calls it.
 
-# spellcheck source="${HOME}/engen/env-creation/generate_directory_tree.sh"
-source "${HOME}/engen/env-creation/generate_directory_tree.sh"
-# spellcheck source="${HOME}/engen/env-creation/directories.sh"
-source "${HOME}/engen/env-creation/directories.sh"
-# spellcheck source="${HOME}/engen/programs-to-install/linux/choose_programs_and_install.sh"
-source "${HOME}/engen/programs-to-install/linux/choose_programs_and_install.sh"
-# spellcheck source="${HOME}/engen/utils/cleanup/main.sh"
-source "${HOME}/engen/utils/cleanup/main.sh"
-# spellcheck source="${HOME}/engen/utils/git-utils/main.sh"
-source "${HOME}/engen/utils/git-utils/main.sh"
-# spellcheck source="${HOME}/engen/utils/helpers/vscode_extensions.sh"
-source "${HOME}/engen/utils/helpers/vscode_extensions.sh"
-# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${HOME}/engen/utils/helpers/validation.sh"
+# spellcheck source="$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
+source "$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
+# spellcheck source="$(get_engen_fs_location)/env-creation/directories.sh"
+source "$(get_engen_fs_location)/env-creation/directories.sh"
+# spellcheck source="$(get_engen_fs_location)/programs-to-install/linux/choose_programs_and_install.sh"
+source "$(get_engen_fs_location)/programs-to-install/linux/choose_programs_and_install.sh"
+# spellcheck source="$(get_engen_fs_location)/utils/cleanup/main.sh"
+source "$(get_engen_fs_location)/utils/cleanup/main.sh"
+# spellcheck source="$(get_engen_fs_location)/utils/git-utils/main.sh"
+source "$(get_engen_fs_location)/utils/git-utils/main.sh"
+# spellcheck source="$(get_engen_fs_location)/utils/helpers/vscode_extensions.sh"
+source "$(get_engen_fs_location)/utils/helpers/vscode_extensions.sh"
+# spellcheck source="$(get_engen_fs_location)/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+# spellcheck source="$(get_engen_fs_location)/utils/helpers/helpers.sh"
+source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
 
 # can either be 
 CONTEXT_ROOT_DIR_NAME="${1}"
@@ -44,9 +54,13 @@ CONTEXT_ROOT_DIR_NAME="${1}"
 update_current_dir_tree() {
   # CURRENT_WORKING_TREE=$(pwd)
   # IFS="/" read -r -a DIR_LIST <<< ${CURRENT_WORKING_TREE}
+  
   # build_config_file
-  CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
-  # echo "Current config file from main.sh: ${CURRENT_ROOT_ENV_CONFIG}"
+  # will stay referenced this way! configs will be saved to $HOME!!!
+  # CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
+  CURRENT_ROOT_ENV_CONFIG="${HOME}/$(build_config_file CONTEXT_ROOT_DIR_NAME)"
+  # DEBUG: outputting the constructed config file to make sure it's in correct format
+  echo "Current config file from main.sh: ${CURRENT_ROOT_ENV_CONFIG}"
   # file search
   if [[ "$(config_file_exists "${CURRENT_ROOT_ENV_CONFIG}")" == "true" ]] ; then
     update_dir_tree "${CURRENT_ROOT_ENV_CONFIG}"
@@ -106,9 +120,9 @@ do
     # pass context down to each process and see if it gets properly consumed
     # context needs to get to get to git_utils main.sh then to git_update_repos.sh 
     if [[ "${process}" == "4" ]] ; then
-      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}"
+      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}" "$(get_engen_fs_location)"
     else
-      ${PROCESSES_ARRAY[process]}
+      ${PROCESSES_ARRAY[process]} "$(get_engen_fs_location)"
     fi
     break
   fi

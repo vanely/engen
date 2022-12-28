@@ -11,7 +11,7 @@
 #arg1=location
 #arg2=search_token
 #arg3=f(file) or d(directory)"
-print_file_system_search() {
+print_file_system_search() { # replace all of this for ref to pwd or export ENGEN_FS_LOCATION from main.sh
   local location="${1}"
   local search_token="${2}"
   local type="${3}"

@@ -8,6 +8,15 @@ source "${HOME}/engen/utils/helpers/validation.sh"
 
 DIR_NAME="${1}"
 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+    echo "$(pwd)"
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
+
 function engen() {
   # reference to wear command is run from
   EXECUTION_DIR="$(pwd)"

@@ -64,6 +64,7 @@ EXTENSIONS_LIST_IDS=(
   d3ciph3r3r.boundless-gray
   impavan.theme-editor
   inksea.inksea-theme
+  jdinhlife.gruvbox
   n0us.all-gray
   pkief.material-icon-theme
 )
@@ -101,6 +102,7 @@ EXTENSIONS_LIST_NAMES=(
   'Boundless_Gray'
   'Theme-Editor'
   'Ink_Sea'
+  'Gruvbox_Theme'
   'All_Gray'
   'Material_Icon_Theme'
 )

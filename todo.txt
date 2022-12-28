@@ -2,6 +2,36 @@ adding relative paths(this will be similar to the work done on depth search)
 [] pass a variable from the main script that is a reference to pwd
   - this will store a path trace from home to engen
   - this can then be used for all imports, with relative paths
+  - will have to make sure the context of the root location is dynamic for when the "engen" command is run
+    - will need to set the "ENGEN_FS_LOCATION" conditionally. Check if the var is exported to ".profile"
+    - if it is, use that reference, else use hard coded "pwd"
+
+files updated with "get_engen_fs_location" and "build_config_file"
+- env-creation
+  - [] directories.sh
+  - [] generate_config_file.sh
+  - [] generate_directory_tree.sh
+    - at bottom when exporting "engen" command, also "export ENGEN_FS_LOCATION" in ".profile"
+- programs-to-install
+  - dependencies
+    - [] dependencies.sh
+  - linux 
+    - [] choose_programs_and_install.sh
+    - [] dev_tools_installs.sh
+- utils
+  - cleanup
+    - [] cleanup_dir_trees.sh
+    - [] main.sh
+  - git-utils
+    - [] git_update_repos.sh
+    - [] git_utils.sh
+    - [] main.sh
+  - helpers
+    - [] initial_checks.sh
+    - [] vscode_extensions.sh
+- [x] main.sh
+- [] engen.sh
+
 
 
 [] use reference to pwd for relative imports and for pointint to where main, and engen are in the
@@ -16,3 +46,9 @@ file system.
   - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   - unzip awscliv2.zip
   - udo ./aws/install
+
+[] change the way programs are being checkec if they are installed or not. 
+  - Instead of "which" use the actual version of the program "EX: <program name> --version" to check if a program is installed
+  - Some operating systems consider the negative output of "which" to be a non 0 length string. So we can properly confirm if 
+  - an application is installed or not. Change this for all use cases of which.
+  - spellcheck source=./programs-to-install/dependencies/dependencies.sh

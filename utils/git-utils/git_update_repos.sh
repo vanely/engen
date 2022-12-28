@@ -70,7 +70,7 @@ choose_repos_to_status_or_update() {
 
   # REVIEW: BUG!
   # file search
-  if [[ "${CURRENT_ROOT_ENV_CONFIG}" == "!e" ]] ; then
+  if [[ -z "${CURRENT_ROOT_ENV_CONFIG}" ]] ; then
     echo
     echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"
     echo "does not exist"

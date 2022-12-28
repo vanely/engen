@@ -211,3 +211,17 @@ consume_arrays() {
 # find_relative_file
 
 # build_config_file "nUnU"
+
+function storing_command_output() {
+  local some_var
+  some_var="$(pwd)"
+  echo "${some_var}"
+}
+
+function other_func() {
+  local Mmm
+  Mmm="$(storing_command_output)/even/more"
+  echo "${Mmm}"
+}
+
+other_func
