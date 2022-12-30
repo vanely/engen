@@ -9,7 +9,7 @@ adding relative paths(this will be similar to the work done on depth search)
 files updated with "get_engen_fs_location" and "build_config_file"
 - env-creation
   - [x] directories.sh
-  - [] generate_config_file.sh
+  - [x] generate_config_file.sh
     - finish updating new template format for generated config files
   - [] generate_directory_tree.sh
     - at bottom when exporting "engen" command, also "export ENGEN_FS_LOCATION" in ".profile"
@@ -57,3 +57,10 @@ file system.
 
 [] update the help options when -h or --help are passed to the engen command
 [] check that the structure of the new linux mint instance has the correct crds in the .gitconfig file in home dir
+[] at the end of creating an environment notify the user of the env path.
+  - this is needed because "engen" could be in just about any directory but generated envs will be exported to $HOME dir
+  - should env be exported to $HOME, or the dir where engen was cloned to?
+    - putting generated envs in other directories may make it harder to interface with said env. Mainly with the update scripts
+      - but we'll also be passing the reference to the initial engen location around, so this may be relatively easy
+
+[] update "git file system location" function with new way of deriving relative path. Reference test file.

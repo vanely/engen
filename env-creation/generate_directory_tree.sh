@@ -1,27 +1,38 @@
 #!/bin/bash
 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+    local FINAL_DIR="${PWD##*/}" 
+    local REMOVED_FINAL_DIR="${PWD/${FINAL_DIR}/}"
+    echo "${REMOVED_FINAL_DIR}"
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
+
 # spellcheck source="${HOME}/engen/env-creation/generate_config_file.sh"
-source "$(print_file_system_search "${HOME}" "engen" "d")"/env-creation/generate_config_file.sh
+source "$(get_engen_fs_location)/env-creation/generate_config_file.sh"
 # source "${HOME}/engen/env-creation/generate_config_file.sh"
 
 # spellcheck source="${HOME}/engen/env-creation/directories.sh"
-source "$(print_file_system_search "${HOME}" "engen" "d")"/env-creation/directories.sh
+source "$(get_engen_fs_location)/env-creation/directories.sh"
 # source "${HOME}/engen/env-creation/directories.sh"
 
 # spellcheck source="${HOME}/engen/utils/helpers/initial_checks.sh"
-source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/initial_checks.sh
+source "$(get_engen_fs_location)/utils/helpers/initial_checks.sh"
 # source "${HOME}/engen/utils/helpers/initial_checks.sh"
 
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/validation.sh
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
 # source "${HOME}/engen/utils/helpers/validation.sh" 
 
 # spellcheck source="${HOME}/engen/utils/helpers/git_utils.sh"
-source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/git_utils.sh
+source "$(get_engen_fs_location)/utils/helpers/git_utils.sh"
 # source "${HOME}/engen/utils/git-utils/git_utils.sh"
 
 # spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
-source "$(print_file_system_search "${HOME}" "engen" "d")"/utils/helpers/helpers.sh
+source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
 # source "${HOME}/engen/utils/helpers/helpers.sh"
 
 # reference to existing config
@@ -31,13 +42,15 @@ EXISTING_CONFIG=""
 # export CURRENT_BASE_DIR dir to be referenced globally
 # arg1=CURRENT_BASE_DIR_NAME
 make_root_dir_global() {
-  # build_config_file
+  # reference to name of env being generated
   current_env_dir="ROOT_ENV_DIR_${1}"
 
   # file search
   if [[ -f ~/.profile ]] && [[ -n "$(grep ${current_env_dir} ~/.profile)" ]] ; then
     echo "Global path reference variable has already been exported for the directory tree!"
   else
+    # at some point I may want to export env to different dir,
+    # create a helper function that receives a base dir for where an env will be created and export the full path from the function
     echo export "${current_env_dir}=${HOME}/${1}" >> ~/.profile
   fi
   
@@ -97,7 +110,7 @@ set_base_directory_name() {
   if [[ "${ENV_BOOL,,}" == "y" ]] ; then
     echo
     echo "Enter only the base directory name(suffix of your config file)"
-    echo "EX: 'ROOT_ENV_CONFIG_baseDirectorySuffix.sh' <-- the last word"
+    echo "EX: '.engenrc_baseDirectorySuffix' <-- part after the underscore"
     echo -n "> "
     read -r EXISTING_CONFIG_SUFFIX 
     echo
@@ -162,7 +175,7 @@ set_base_directory_name() {
     elif [[ -f ~/.bashrc ]] && [[ ! -f ~/.profile ]]; then
       touch ~/.profile
       make_root_dir_global "${BASE}"
-    else
+    elif [[ ! -f ~/.bashrc ]] && [[ -f ~/.profile ]]; then
       touch ~/.bashrc
       touch ~/.profile
       make_root_dir_global "${BASE}"
@@ -206,7 +219,7 @@ create_directories() {
             elif [[ -f ~/.bashrc ]] && [[ ! -f ~/.profile ]]; then
               touch ~/.profile
               make_root_dir_global "${CURRENT_BASE_DIR_NAME}"
-            else
+            elif [[ ! -f ~/.bashrc ]] && [[ ! -f ~/.profile ]]; then
               touch ~/.bashrc
               touch ~/.profile
               make_root_dir_global "${CURRENT_BASE_DIR_NAME}"

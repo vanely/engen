@@ -2,7 +2,9 @@
 
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
-    echo "$(pwd)"
+    local FINAL_DIR="${PWD##*/}" 
+    local REMOVED_FINAL_DIR="${PWD/${FINAL_DIR}/}"
+    echo "${REMOVED_FINAL_DIR}"
   else
     # will be exported from ~/.profile
     echo ENGEN_FS_LOCATION
