@@ -1,11 +1,23 @@
 #!/bin/bash
 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+    # "dirname" returns the path up to but not including the final dir
+    REMOVED_FINAL_DIR=$(dirname $(pwd))
+    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
+    echo ${DOUBLY_REMOVED_FINAL_DIR}
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
+
 # spellcheck source="${HOME}/engen/utils/cleanup/cleanup_installs.sh"
-source "${HOME}/engen/utils/cleanup/cleanup_dir_trees.sh"
+source "$(get_engen_fs_location)/utils/cleanup/cleanup_dir_trees.sh"
 # spellcheck source="${HOME}/engen/utils/cleanup/cleanup_installs.sh"
-source "${HOME}/engen/utils/cleanup/cleanup_installs.sh" # not implremented yet
-# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${HOME}/engen/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/cleanup/cleanup_installs.sh" # not implremented yet
+# spellcheck source="$(get_engen_fs_location)/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
 
 remove_dir_trees() {
   iteratively_remove_env_dirs

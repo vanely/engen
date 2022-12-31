@@ -1,5 +1,5 @@
 adding relative paths(this will be similar to the work done on depth search)
-[] pass a variable from the main script that is a reference to pwd
+[x] pass a variable from the main script that is a reference to pwd
   - this will store a path trace from home to engen
   - this can then be used for all imports, with relative paths
   - will have to make sure the context of the root location is dynamic for when the "engen" command is run
@@ -11,32 +11,33 @@ files updated with "get_engen_fs_location" and "build_config_file"
   - [x] directories.sh
   - [x] generate_config_file.sh
     - finish updating new template format for generated config files
-  - [] generate_directory_tree.sh
+  - [x] generate_directory_tree.sh
     - at bottom when exporting "engen" command, also "export ENGEN_FS_LOCATION" in ".profile"
 - programs-to-install
   - dependencies
-    - [] dependencies.sh
+    - [x] dependencies.sh
   - linux 
-    - [] choose_programs_and_install.sh
-    - [] dev_tools_installs.sh
+    - [x] choose_programs_and_install.sh
+    - [x] dev_tools_installs.sh
 - utils
   - cleanup
-    - [] cleanup_dir_trees.sh
-    - [] main.sh
+    - [x] cleanup_dir_trees.sh
+    - [x] main.sh
   - git-utils
-    - [] git_update_repos.sh
-    - [] git_utils.sh
+    - [x] git_update_repos.sh
+    - [x] git_utils.sh
     - [x] main.sh
   - helpers
-    - [] initial_checks.sh
-    - [] vscode_extensions.sh
+    - [x] initial_checks.sh
+    - [x] vscode_extensions.sh
 - [x] main.sh
 - [x] engen.sh
+  - [x] when "main.sh" is called from engen, make sure "get_engen_fs_location" is used to derive it's location
 - [] once all files have been updated, manually smoke test the creation and updating of env using "./main.sh" and "engen" command
 
 
 
-[] use reference to pwd for relative imports and for pointint to where main, and engen are in the
+[x] use reference to pwd for relative imports and for pointint to where main, and engen are in the
 file system.
   - 2 first entry points are main(when env generation is being done for the first time) and engen(after main has been run)
   - in both entry points, import function from helpers file that will allow engen to be found in file system
@@ -63,4 +64,7 @@ file system.
     - putting generated envs in other directories may make it harder to interface with said env. Mainly with the update scripts
       - but we'll also be passing the reference to the initial engen location around, so this may be relatively easy
 
-[] update "git file system location" function with new way of deriving relative path. Reference test file.
+[x] update "get file system location" function with new way of deriving relative path. Reference test file.
+[] there's a cool way to make the "get_engen_fs_location" function recursive, by allowing an arugment 
+  - that's the desired dir and is compared with the last dir name in the pwd path, if not the correct dir name
+  - then keep recursively chaining "dirname" to 

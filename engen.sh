@@ -3,7 +3,7 @@
 DIR_NAME="${1}"
 
 function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     echo "$(pwd)"
   else
     # will be exported from ~/.profile
@@ -110,7 +110,7 @@ function engen() {
           # echo "Current env: ${ENV_DIR_NAMES[${index}]}"
           echo
           cd "${HOME}/${ENV_DIR_NAMES[${index}]}"
-          bash "${HOME}/engen/main.sh" "${ENV_DIR_NAMES[${index}]}"
+          bash "$(get_engen_fs_location)/main.sh" "${ENV_DIR_NAMES[${index}]}"
           return_to_execution_dir
           break
         else
@@ -123,7 +123,7 @@ function engen() {
       done
     else
       # file search use depth search instead
-      bash "${HOME}/engen/main.sh"
+      bash "$(get_engen_fs_location)/main.sh"
       return_to_execution_dir
     fi
   fi

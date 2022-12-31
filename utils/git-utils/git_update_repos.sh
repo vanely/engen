@@ -1,14 +1,25 @@
 #!/bin/bash
 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+    # "dirname" returns the path up to but not including the final dir
+    REMOVED_FINAL_DIR=$(dirname $(pwd))
+    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
+    echo ${DOUBLY_REMOVED_FINAL_DIR}
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
+
 # update repositories for directories within generated environment
 # go through all git initialized repos and do a pull
 
-# spellcheck source=./env-creation/directories.sh
-# source ./env-creation/directories.sh
+
 # spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh" 
-source "${HOME}/engen/utils/git-utils/git_utils.sh"
+source "$(get_engen_fs_location)/utils/git-utils/git_utils.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${HOME}/engen/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
 
 #arg1=CONTEXT_ROOT_DIR_NAME consumed from main.sh
 update_all_dirs() {
@@ -66,7 +77,7 @@ choose_repos_to_status_or_update() {
   local CURRENT_ROOT_ENV_CONFIG
   # once context arrives derive config file name here
   # build_config_file
-  CURRENT_ROOT_ENV_CONFIG="${HOME}/ROOT_ENV_CONFIG_${CONTEXT_ROOT_DIR_NAME}.sh"
+  CURRENT_ROOT_ENV_CONFIG="$(build_config_file "${CONTEXT_ROOT_DIR_NAME}")"
 
   # REVIEW: BUG!
   # file search

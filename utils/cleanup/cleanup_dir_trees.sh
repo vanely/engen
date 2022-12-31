@@ -1,7 +1,21 @@
 #!/bin/bash
 
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+    # "dirname" returns the path up to but not including the final dir
+    REMOVED_FINAL_DIR=$(dirname $(pwd))
+    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
+    echo ${DOUBLY_REMOVED_FINAL_DIR}
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
+
 # spellcheck source=./utils/helpers/validation.sh
-source "${HOME}/engen/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+# spellcheck source=./utils/helpers/helpers.sh
+source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
 
 # convert grep search output with ROOT_ENV_DIR prefix to array
 arr=()
@@ -56,7 +70,7 @@ iteratively_remove_env_dirs() {
         IFS="/" read -ra dirs_in_path <<< ${ENV_DIR_PATHS[i]}
         local ROOT_ENV_DIR_PATH_NAME="${dirs_in_path[@]: -1:1}"
         # build_config_file
-        local CONFIG_FILE="${HOME}/ROOT_ENV_CONFIG_${ROOT_ENV_DIR_PATH_NAME}.sh"
+        local CONFIG_FILE="${HOME}/$(build_config_file "${ROOT_ENV_DIR_PATH_NAME}")"
 
         # evaluates the string stored in the variable to its variable definition
         # file search

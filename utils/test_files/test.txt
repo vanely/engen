@@ -1,0 +1,2 @@
+export some_var=/home/vnly/engen/utils/test_files
+export some_var=/home/vnly/engen/utils/test_files

@@ -3,7 +3,7 @@
 # so far it seems like or imports, I have to add this function at the top of every file
 # is it then worth it to pass this reference to the below scripts
 function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     echo "$(pwd)"
   else
     # will be exported from ~/.profile
@@ -53,12 +53,11 @@ CONTEXT_ROOT_DIR_NAME="${1}"
 update_current_dir_tree() {
   local CURRENT_ROOT_ENV_CONFIG
   local REF_TO_FS_LOCATION
-  CURRENT_ROOT_ENV_CONFIG="${HOME}/$(build_config_file CONTEXT_ROOT_DIR_NAME)"
+  CURRENT_ROOT_ENV_CONFIG="${HOME}/$(build_config_file "${CONTEXT_ROOT_DIR_NAME}")"
   REF_TO_FS_LOCATION="${1}"
   
-
   # DEBUG: outputting the constructed config file to make sure it's in correct format
-  echo "Current config file from main.sh: ${CURRENT_ROOT_ENV_CONFIG}"
+  echo "Current config file: ${CURRENT_ROOT_ENV_CONFIG}"
   # file search
   if [[ "$(config_file_exists "${CURRENT_ROOT_ENV_CONFIG}")" == "true" ]] ; then
     update_dir_tree "${CURRENT_ROOT_ENV_CONFIG}" "${REF_TO_FS_LOCATION}"
@@ -118,9 +117,9 @@ do
     # pass context down to each process and see if it gets properly consumed
     # context needs to get to get to git_utils main.sh then to git_update_repos.sh 
     if [[ "${process}" == "4" ]] ; then
-      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}" "$(get_engen_fs_location)"
+      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}" "$(get_engen_fs_location)" # <-- may not need to pass down fs location
     else
-      ${PROCESSES_ARRAY[process]} "$(get_engen_fs_location)"
+      ${PROCESSES_ARRAY[process]} "$(get_engen_fs_location)" # <-- may not need to pass down fs location
     fi
     break
   fi

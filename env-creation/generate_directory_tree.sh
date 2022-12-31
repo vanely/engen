@@ -1,9 +1,10 @@
 #!/bin/bash
 
 function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
-    local FINAL_DIR="${PWD##*/}" 
-    local REMOVED_FINAL_DIR="${PWD/${FINAL_DIR}/}"
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+    # "dirname" returns the path up to but not including the final dir
+    local REMOVED_FINAL_DIR
+    REMOVED_FINAL_DIR=$(pwd)
     echo "${REMOVED_FINAL_DIR}"
   else
     # will be exported from ~/.profile
@@ -118,11 +119,10 @@ set_base_directory_name() {
     # change to ".engenrc_${EXISTING_CONFIG_SUFFIX}" omit the ".sh"
     # use depth search to find config file "find $HOME -maxdepth 2 -type f | grep 'ROOT_ENV'"
     # build_config_file
-    EXISTING_CONFIG="$(print_file_system_search "${HOME}" ".engenrc_${EXISTING_CONFIG_SUFFIX}" "f")"
-    # EXISTING_CONFIG="${HOME}/ROOT_ENV_CONFIG_${EXISTING_CONFIG_SUFFIX}.sh"
+    EXISTING_CONFIG="$(print_file_system_search "${HOME}" "$(build_config_file "${EXISTING_CONFIG_SUFFIX}")" "f")"
     CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${EXISTING_CONFIG_SUFFIX}")"
     # check git creds or prompt for them here
-    config_git_creds_and_auth
+    config_git_creds_and_auth "${EXISTING_CONFIG}"
   elif [[ "${ENV_BOOL,,}" == "n" ]] ; then
     echo
     echo "========================================================================================="
@@ -271,7 +271,9 @@ create_directories() {
     else
       BASE_DIR_NAME="${DIR_NAMES[3]}"
     fi
-    create_and_update_dir_paths "${HOME}/ROOT_ENV_CONFIG_${BASE_DIR_NAME}.sh" "new"
+    create_and_update_dir_paths "$(build_config_file "${BASE_DIR_NAME}")" "new"
+    echo
+    echo "NOTE: config file in home directory: ${HOME}/$(build_config_file "${BASE_DIR_NAME}")"
     echo
     echo "Be sure to store your config file somewhere safe, like github where you'll be able to "
     echo "reference it again, incase you'd like to regenerate the same directory tree."
@@ -279,6 +281,9 @@ create_directories() {
 
   # file search
   if [[ -f ~/.profile ]]; then
+    if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile)  ]] ; then
+      echo export ENGEN_FS_LOCATION="$(get_engen_fs_location)" >> ~/.profile
+    fi
     if [[ -z $(grep "alias engen=" ~/.profile) ]] ; then
       echo 'alias engen="bash ~/engen/engen.sh"' >> ~/.profile
     fi

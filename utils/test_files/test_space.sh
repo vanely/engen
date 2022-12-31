@@ -222,22 +222,15 @@ function other_func() {
   # local Mmm
   # Mmm="$(storing_command_output)/even/more"
   # echo "${Mmm}"
-  local FINAL_DIR="${PWD##*/}"
-  local REMOVED_FINAL_DIR="${PWD/${FINAL_DIR}/}"
-
-  local NEW_FINAL_DIR="${REMOVED_FINAL_DIR##*/}"
-
-  echo "FULL_PATH: ${PWD}"
-  echo "REMOVED_FINAL_DIR: ${REMOVED_FINAL_DIR}"
-  echo "NEW_FINAL_DIR: ${NEW_FINAL_DIR}"
-
+  local REMOVED_FINAL_DIR=$(dirname $(pwd))
+  echo "REMOVED_FINAL_DIR:" "${REMOVED_FINAL_DIR}"
   # instead of all the above nonsense, use the following:
   # "dirname" returns the path up to but not including the final dir
-  REMOVED_FINAL_DIR=$(dirname $(pwd))
 
   # nest it to continue to remove dirs from the path:
-  DOUBLY_REMOVED_FINAL_DIR=$(dirname $(dirname $(pwd)))
-
+  DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
+  echo "DOUBLY_REMOVED_FINAL_DIR: ${DOUBLY_REMOVED_FINAL_DIR}"
+  # echo export some_var="$(storing_command_output)" >> "./test.txt"
 }
 
 other_func

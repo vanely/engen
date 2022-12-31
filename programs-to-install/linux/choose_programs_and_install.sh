@@ -1,12 +1,21 @@
 #!/bin/bash
 
-# NOTE: the directories of the files being sourced should be expressed
-# relative to the directory of the root script that evetually calls it.
+function get_engen_fs_location() {
+  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+    # "dirname" returns the path up to but not including the final dir
+    REMOVED_FINAL_DIR=$(dirname $(pwd))
+    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
+    echo ${DOUBLY_REMOVED_FINAL_DIR}
+  else
+    # will be exported from ~/.profile
+    echo ENGEN_FS_LOCATION
+  fi
+}
 
 # spellcheck source="${HOME}/engen/programs-to-install/linux/dev_tools_installs.sh"
-source "${HOME}/engen/programs-to-install/linux/dev_tools_installs.sh"
+source "$(get_engen_fs_location)/programs-to-install/linux/dev_tools_installs.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${HOME}/engen/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)/utils/helpers/validation.sh"
 
 PROGRAM_NAMES_ARRAY_LEN="${#PROGRAM_NAMES_ARRAY[@]}"
 
