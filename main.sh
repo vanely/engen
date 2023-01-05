@@ -2,12 +2,22 @@
 
 # so far it seems like or imports, I have to add this function at the top of every file
 # is it then worth it to pass this reference to the below scripts
+function export_engen_fs_location() {
+  local REMOVED_FINAL_DIR
+  REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
+  echo export ENGEN_FS_LOCATION="${REMOVED_FINAL_DIR}" >> ~/.profile
+  echo "${REMOVED_FINAL_DIR}"
+}
+
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    echo "$(pwd)"
+    local REMOVED_FINAL_DIR
+    REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
+    echo "${REMOVED_FINAL_DIR}"
   else
+    source "${HOME}/.profile"
     # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
+    echo "EXPORTED FS LOCATION: ${ENGEN_FS_LOCATION}"
   fi
 }
 

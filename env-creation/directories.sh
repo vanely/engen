@@ -3,8 +3,9 @@
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     # "dirname" returns the path up to but not including the final dir
-    REMOVED_FINAL_DIR=$(dirname $(pwd))
-    echo ${REMOVED_FINAL_DIR}
+    local REMOVED_FINAL_DIR
+    REMOVED_FINAL_DIR="$(pwd)"
+    echo "${REMOVED_FINAL_DIR}"
   else
     # will be exported from ~/.profile
     echo ENGEN_FS_LOCATION
