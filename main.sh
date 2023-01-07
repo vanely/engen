@@ -12,7 +12,8 @@ function export_engen_fs_location() {
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     local REMOVED_FINAL_DIR
-    REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
+    # REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
+    REMOVED_FINAL_DIR="$(cd $(dirname ./main.sh) && pwd)"
     echo "${REMOVED_FINAL_DIR}"
   else
     source "${HOME}/.profile"
