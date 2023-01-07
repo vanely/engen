@@ -236,9 +236,9 @@ function other_func() {
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     local REMOVED_FINAL_DIR
-    REMOVED_FINAL_DIR="$(cd "$(dirname "${0}")" && pwd)"
-    echo "${REMOVED_FINAL_DIR}"
-    echo "current file: ${0}"
+    REMOVED_FINAL_DIR="$(cd "$(dirname "../${0}")" && pwd)"
+    echo "Current Directory: ${REMOVED_FINAL_DIR}"
+    # echo "current file: ${0}"
   else
     source "${HOME}/.profile"
     # will be exported from ~/.profile

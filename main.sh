@@ -2,42 +2,50 @@
 
 # so far it seems like or imports, I have to add this function at the top of every file
 # is it then worth it to pass this reference to the below scripts
-function export_engen_fs_location() {
-  local REMOVED_FINAL_DIR
-  REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
-  echo export ENGEN_FS_LOCATION="${REMOVED_FINAL_DIR}" >> ~/.profile
-  echo "${REMOVED_FINAL_DIR}"
-}
 
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     local REMOVED_FINAL_DIR
-    # REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
-    REMOVED_FINAL_DIR="$(cd $(dirname ./main.sh) && pwd)"
+    REMOVED_FINAL_DIR="$(cd "$(dirname "${0}")" && pwd)"
+    echo export ENGEN_FS_LOCATION="'${REMOVED_FINAL_DIR}'" >> ~/.profile
     echo "${REMOVED_FINAL_DIR}"
+    # echo "current file: ${0}"
   else
     source "${HOME}/.profile"
     # will be exported from ~/.profile
-    echo "EXPORTED FS LOCATION: ${ENGEN_FS_LOCATION}"
+    echo "${ENGEN_FS_LOCATION}"
   fi
 }
 
+# function get_engen_fs_location() {
+#   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+#     local REMOVED_FINAL_DIR
+#     # REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
+#     REMOVED_FINAL_DIR="$(cd $(dirname ./main.sh) && pwd)"
+#     echo "${REMOVED_FINAL_DIR}"
+#   else
+#     source "${HOME}/.profile"
+#     # will be exported from ~/.profile
+#     echo "EXPORTED FS LOCATION: ${ENGEN_FS_LOCATION}"
+#   fi
+# }
+
 # spellcheck source="$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
-source "$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
+source "$(get_engen_fs_location)""/env-creation/generate_directory_tree.sh"
 # spellcheck source="$(get_engen_fs_location)/env-creation/directories.sh"
-source "$(get_engen_fs_location)/env-creation/directories.sh"
+source "$(get_engen_fs_location)""/env-creation/directories.sh"
 # spellcheck source="$(get_engen_fs_location)/programs-to-install/linux/choose_programs_and_install.sh"
-source "$(get_engen_fs_location)/programs-to-install/linux/choose_programs_and_install.sh"
+source "$(get_engen_fs_location)""/programs-to-install/linux/choose_programs_and_install.sh"
 # spellcheck source="$(get_engen_fs_location)/utils/cleanup/main.sh"
-source "$(get_engen_fs_location)/utils/cleanup/main.sh"
+source "$(get_engen_fs_location)""/utils/cleanup/main.sh"
 # spellcheck source="$(get_engen_fs_location)/utils/git-utils/main.sh"
-source "$(get_engen_fs_location)/utils/git-utils/main.sh"
+source "$(get_engen_fs_location)""/utils/git-utils/main.sh"
 # spellcheck source="$(get_engen_fs_location)/utils/helpers/vscode_extensions.sh"
-source "$(get_engen_fs_location)/utils/helpers/vscode_extensions.sh"
+source "$(get_engen_fs_location)""/utils/helpers/vscode_extensions.sh"
 # spellcheck source="$(get_engen_fs_location)/utils/helpers/validation.sh"
-source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+source "$(get_engen_fs_location)""/utils/helpers/validation.sh"
 # spellcheck source="$(get_engen_fs_location)/utils/helpers/helpers.sh"
-source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
+source "$(get_engen_fs_location)""/utils/helpers/helpers.sh"
 
 # can either be 
 CONTEXT_ROOT_DIR_NAME="${1}"
