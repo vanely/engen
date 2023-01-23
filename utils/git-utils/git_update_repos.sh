@@ -1,25 +1,17 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    REMOVED_FINAL_DIR=$(dirname $(pwd))
-    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
-    echo ${DOUBLY_REMOVED_FINAL_DIR}
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # update repositories for directories within generated environment
 # go through all git initialized repos and do a pull
 
-
 # spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh" 
-source "$(get_engen_fs_location)/utils/git-utils/git_utils.sh"
+source "${ROOT_FS_LOCATION}/utils/git-utils/git_utils.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 
 #arg1=CONTEXT_ROOT_DIR_NAME consumed from main.sh
 update_all_dirs() {

@@ -1,43 +1,17 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    REMOVED_FINAL_DIR=$(dirname $(pwd))
-    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
-    echo ${DOUBLY_REMOVED_FINAL_DIR}
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # spellcheck source=./utils/helpers/validation.sh
-source "$(gen_engen_fs_location)/utils/helpers/validation.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 
 # associative array of extensions
 # declare -A PERSONAL_EXTENSIONS_LIST
 # PERSONAL_EXTENSIONS_LIST["Better_TOML"]="bungcip.better-toml"
 # PERSONAL_EXTENSIONS_LIST["Path_Intellisense"]="christian-kohler.path-intellisense"
-# PERSONAL_EXTENSIONS_LIST["Bracket_Pair_Colorizer_2"]="coenraads.bracket-pair-colorizer-2"
-# PERSONAL_EXTENSIONS_LIST["ESLint"]="dbaeumer.vscode-eslint"
-# PERSONAL_EXTENSIONS_LIST["Git_Lens"]="eamodio.gitlens"
-# PERSONAL_EXTENSIONS_LIST["Prettier"]="esbenp.prettier-vscode"
-# PERSONAL_EXTENSIONS_LIST["Comment_Anchors"]="exodiusstudios.comment-anchors"
-# PERSONAL_EXTENSIONS_LIST["Code_Runner"]="formulahendry.code-runner"
-# PERSONAL_EXTENSIONS_LIST["Bash_Automated_Testing"]="jetmartin.bats"
-# PERSONAL_EXTENSIONS_LIST["Bash_IDE"]="mads-hartmann.bash-ide-vscode"
-# PERSONAL_EXTENSIONS_LIST["JavaScript_Docstrings"]="massi.javascript-docstrings"
-# PERSONAL_EXTENSIONS_LIST["Rust_Analyzer"]="matklad.rust-analyzer"
-# PERSONAL_EXTENSIONS_LIST["Monokai_Pro"]="monokai.theme-monokai-pro-vscode"
-# PERSONAL_EXTENSIONS_LIST["Rust_Assist"]="mooman219.rust-assist"
-# PERSONAL_EXTENSIONS_LIST["Atom_Keybindings"]="ms-vscode.atom-keybindings"
-# PERSONAL_EXTENSIONS_LIST["Material_Icon_Theme"]="pkief.material-icon-theme"
-# PERSONAL_EXTENSIONS_LIST["Power_Mode"]="hoovercj.vscode-power-mode"
-# PERSONAL_EXTENSIONS_LIST["Live_Server"]="ritwickdey.liveserver"
-# PERSONAL_EXTENSIONS_LIST["Bash_Debug"]="rogalmic.bash-debug"
-# PERSONAL_EXTENSIONS_LIST["Rust"]="rust-lang.rust"
-# PERSONAL_EXTENSIONS_LIST["SpellCheck"]="timonwong.shellcheck"
 
 # TO ADD
 

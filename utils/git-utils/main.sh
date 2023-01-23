@@ -1,23 +1,16 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    REMOVED_FINAL_DIR=$(dirname $(pwd))
-    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
-    echo ${DOUBLY_REMOVED_FINAL_DIR}
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # spellcheck source="${HOME}/engen/utils/git-utils/git_update_repos.sh"
-source "$(get_engen_fs_location)/utils/git-utils/git_update_repos.sh"
+source "${ROOT_FS_LOCATION}/utils/git-utils/git_update_repos.sh"
 # spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 # spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh"
-source "$(get_engen_fs_location)/utils/git-utils/git_utils.sh"
+source "${ROOT_FS_LOCATION}/utils/git-utils/git_utils.sh"
 
 #arg1=CONTEXT_ROOT_DIR_NAME
 git_update() {

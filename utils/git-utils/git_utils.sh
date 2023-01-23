@@ -1,19 +1,11 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    REMOVED_FINAL_DIR=$(dirname $(pwd))
-    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
-    echo ${DOUBLY_REMOVED_FINAL_DIR}
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # pass config context as an arg to this script from main.sh(main will have the context as an optional arg. Account for this)
-
 
 # clone repos into their respective directories
 # arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into
@@ -70,8 +62,8 @@ check_status_of_working_tree() {
 github_auth() {
   # find some way to safely access sensitive token/ or remove
   # file search
-  if [[ -f "$(get_engen_fs_location)/utils/git-utils/tokenFile.txt" ]] ; then 
-    gh auth login --with-token < "$(get_engen_fs_location)/utils/git-utils/tokenFile.txt"
+  if [[ -f "${ROOT_FS_LOCATION}/utils/git-utils/tokenFile.txt" ]] ; then 
+    gh auth login --with-token < "${ROOT_FS_LOCATION}/utils/git-utils/tokenFile.txt"
   else
     gh auth login
   fi

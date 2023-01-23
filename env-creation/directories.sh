@@ -1,19 +1,12 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    local REMOVED_FINAL_DIR
-    REMOVED_FINAL_DIR="$(pwd)"
-    echo "${REMOVED_FINAL_DIR}"
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # find relative location of engen(depth search)
-source "$(get_engen_fs_location)/utils/git-utils/git_utils.sh"
+source "${ROOT_FS_LOCATION}/utils/git-utils/git_utils.sh"
 # source "${HOME}/engen/utils/git-utils/git_utils.sh"
 
 # arg1=PATH_TO_CONFIG

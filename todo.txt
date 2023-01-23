@@ -44,7 +44,6 @@ file system.
   - this function will run pwd and can potentially take an argument that decides where the slicing of the pwd path output ends
   - pass this reference down through the scripts that are invoked after similar to component props that are being passed down alreday
   
-
 [] add the following download steps to linux install list for AWS CLI install
   - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   - unzip awscliv2.zip

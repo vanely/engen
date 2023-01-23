@@ -2,20 +2,16 @@
 
 DIR_NAME="${1}"
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    echo "$(pwd)"
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # source ./utils/helpers/validation.sh
 # spellcheck source="${HOME}/engen/utils/helpers/helpers.sh"
-source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/helpers.sh"
 # spellcheck source=/${HOME}/engen/utils/helpers/validation.sh
-source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 
 function engen() {
   # reference to wear command is run from
@@ -110,7 +106,7 @@ function engen() {
           # echo "Current env: ${ENV_DIR_NAMES[${index}]}"
           echo
           cd "${HOME}/${ENV_DIR_NAMES[${index}]}"
-          bash "$(get_engen_fs_location)/main.sh" "${ENV_DIR_NAMES[${index}]}"
+          bash "${ROOT_FS_LOCATION}/main.sh" "${ENV_DIR_NAMES[${index}]}"
           return_to_execution_dir
           break
         else
@@ -123,7 +119,7 @@ function engen() {
       done
     else
       # file search use depth search instead
-      bash "$(get_engen_fs_location)/main.sh"
+      bash "${ROOT_FS_LOCATION}/main.sh"
       return_to_execution_dir
     fi
   fi

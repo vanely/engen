@@ -1,36 +1,27 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    cd $(pwd)
-    local REMOVED_FINAL_DIR
-    REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
-    # echo "FOUND DIRS: $(find ${HOME} -maxdepth 2 -type d -name engen)"
-    echo "${REMOVED_FINAL_DIR}"
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
-# spellcheck source="$(get_engen_fs_location)/engen/env-creation/generate_config_file.sh"
-source "$(get_engen_fs_location)/env-creation/generate_config_file.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/engen/env-creation/generate_config_file.sh"
+source "${ROOT_FS_LOCATION}/env-creation/generate_config_file.sh"
 
-# spellcheck source="$(get_engen_fs_location)/engen/env-creation/directories.sh"
-source "$(get_engen_fs_location)/env-creation/directories.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/engen/env-creation/directories.sh"
+source "${ROOT_FS_LOCATION}/env-creation/directories.sh"
 
-# spellcheck source="$(get_engen_fs_location)/engen/utils/helpers/initial_checks.sh"
-source "$(get_engen_fs_location)/utils/helpers/initial_checks.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/engen/utils/helpers/initial_checks.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/initial_checks.sh"
 
-# spellcheck source="$(get_engen_fs_location)/engen/utils/helpers/validation.sh"
-source "$(get_engen_fs_location)/utils/helpers/validation.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/engen/utils/helpers/validation.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 
-# spellcheck source="$(get_engen_fs_location)/engen/utils/helpers/git_utils.sh"
-source "$(get_engen_fs_location)/utils/helpers/git_utils.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/engen/utils/helpers/git_utils.sh"
+source "${ROOT_FS_LOCATION}/utils/git-utils/git_utils.sh"
 
-# spellcheck source="$(get_engen_fs_location)/engen/utils/helpers/helpers.sh"
-source "$(get_engen_fs_location)/utils/helpers/helpers.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/engen/utils/helpers/helpers.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/helpers.sh"
 
 # reference to existing config
 EXISTING_CONFIG=""

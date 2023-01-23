@@ -3,49 +3,37 @@
 # so far it seems like or imports, I have to add this function at the top of every file
 # is it then worth it to pass this reference to the below scripts
 
+ROOT_FS_LOCATION=""
+
 function get_engen_fs_location() {
   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
     local REMOVED_FINAL_DIR
     REMOVED_FINAL_DIR="$(cd "$(dirname "${0}")" && pwd)"
     echo export ENGEN_FS_LOCATION="'${REMOVED_FINAL_DIR}'" >> ~/.profile
     echo "${REMOVED_FINAL_DIR}"
-    # echo "current file: ${0}"
-  else
-    source "${HOME}/.profile"
-    # will be exported from ~/.profile
-    echo "${ENGEN_FS_LOCATION}"
   fi
 }
 
-# function get_engen_fs_location() {
-#   if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-#     local REMOVED_FINAL_DIR
-#     # REMOVED_FINAL_DIR="$(find ${HOME} -maxdepth 2 -type d -name engen)"
-#     REMOVED_FINAL_DIR="$(cd $(dirname ./main.sh) && pwd)"
-#     echo "${REMOVED_FINAL_DIR}"
-#   else
-#     source "${HOME}/.profile"
-#     # will be exported from ~/.profile
-#     echo "EXPORTED FS LOCATION: ${ENGEN_FS_LOCATION}"
-#   fi
-# }
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
-# spellcheck source="$(get_engen_fs_location)/env-creation/generate_directory_tree.sh"
-source "$(get_engen_fs_location)""/env-creation/generate_directory_tree.sh"
-# spellcheck source="$(get_engen_fs_location)/env-creation/directories.sh"
-source "$(get_engen_fs_location)""/env-creation/directories.sh"
-# spellcheck source="$(get_engen_fs_location)/programs-to-install/linux/choose_programs_and_install.sh"
-source "$(get_engen_fs_location)""/programs-to-install/linux/choose_programs_and_install.sh"
-# spellcheck source="$(get_engen_fs_location)/utils/cleanup/main.sh"
-source "$(get_engen_fs_location)""/utils/cleanup/main.sh"
-# spellcheck source="$(get_engen_fs_location)/utils/git-utils/main.sh"
-source "$(get_engen_fs_location)""/utils/git-utils/main.sh"
-# spellcheck source="$(get_engen_fs_location)/utils/helpers/vscode_extensions.sh"
-source "$(get_engen_fs_location)""/utils/helpers/vscode_extensions.sh"
-# spellcheck source="$(get_engen_fs_location)/utils/helpers/validation.sh"
-source "$(get_engen_fs_location)""/utils/helpers/validation.sh"
-# spellcheck source="$(get_engen_fs_location)/utils/helpers/helpers.sh"
-source "$(get_engen_fs_location)""/utils/helpers/helpers.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/env-creation/generate_directory_tree.sh"
+source "${ROOT_FS_LOCATION}/env-creation/generate_directory_tree.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/env-creation/directories.sh"
+source "${ROOT_FS_LOCATION}/env-creation/directories.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/programs-to-install/linux/choose_programs_and_install.sh"
+source "${ROOT_FS_LOCATION}/programs-to-install/linux/choose_programs_and_install.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/utils/cleanup/main.sh"
+source "${ROOT_FS_LOCATION}/utils/cleanup/main.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/utils/git-utils/main.sh"
+source "${ROOT_FS_LOCATION}/utils/git-utils/main.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/utils/helpers/vscode_extensions.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/vscode_extensions.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
+# spellcheck source="${ROOT_FS_LOCATION}/utils/helpers/helpers.sh"
+source "${ROOT_FS_LOCATION}/utils/helpers/helpers.sh"
 
 # can either be 
 CONTEXT_ROOT_DIR_NAME="${1}"
@@ -136,9 +124,9 @@ do
     # pass context down to each process and see if it gets properly consumed
     # context needs to get to get to git_utils main.sh then to git_update_repos.sh 
     if [[ "${process}" == "4" ]] ; then
-      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}" "$(get_engen_fs_location)" # <-- may not need to pass down fs location
+      ${PROCESSES_ARRAY[process]} "${CONTEXT_ROOT_DIR_NAME}" "${ROOT_FS_LOCATION}" # <-- may not need to pass down fs location
     else
-      ${PROCESSES_ARRAY[process]} "$(get_engen_fs_location)" # <-- may not need to pass down fs location
+      ${PROCESSES_ARRAY[process]} "${ROOT_FS_LOCATION}" # <-- may not need to pass down fs location
     fi
     break
   fi

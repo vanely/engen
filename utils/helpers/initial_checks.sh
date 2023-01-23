@@ -1,19 +1,12 @@
 #!/bin/bash
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    # "dirname" returns the path up to but not including the final dir
-    REMOVED_FINAL_DIR=$(dirname $(pwd))
-    DOUBLY_REMOVED_FINAL_DIR=$(dirname ${REMOVED_FINAL_DIR})
-    echo ${DOUBLY_REMOVED_FINAL_DIR}
-  else
-    # will be exported from ~/.profile
-    echo ENGEN_FS_LOCATION
-  fi
-}
+ROOT_FS_LOCATION=""
+if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+fi
 
 # spellcheck source=./programs-to-install/dependencies/dependencies.sh
-source "$(get_engen_fs_location)/programs-to-install/dependencies/dependencies.sh"
+source "${ROOT_FS_LOCATION}/programs-to-install/dependencies/dependencies.sh"
 
 dependency_checks() {
   check_and_install_git
