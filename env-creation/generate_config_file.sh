@@ -54,7 +54,7 @@ generate_config_file() {
   # copy ""./config-file-templates/.engenrc_template"
   cp ./config-file-templates/.engenrc_template "./config-file-templates/${CONFIG_FILE_NAME}"
 
-  ROOT_ENV_DIR_PATH="${HOME}/${1}"
+  ROOT_ENV_DIR_PATH="'${HOME}/${1}'"
 
   # check for git creds in ~/.gitconfig or prompt for git creds here
   get_or_prompt_for_git_creds

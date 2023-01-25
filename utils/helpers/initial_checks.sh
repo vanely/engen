@@ -22,7 +22,7 @@ check_and_install_gnome_keyring() {
     echo "_________________________________________________________________________________________"
     echo
    else
-    echo "Installing gnome-keyring"
+    echo "Installing 'gnome-keyring'"
     echo "_________________________________________________________________________________________"
     echo
     sudo apt-get -y install gnome-keyring

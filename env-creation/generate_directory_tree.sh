@@ -272,7 +272,7 @@ create_directories() {
       echo export ENGEN_FS_LOCATION="$(get_engen_fs_location)" >> ~/.profile
     fi
     if [[ -z $(grep "alias engen=" ~/.profile) ]] ; then
-      echo 'alias engen="bash ~/engen/engen.sh"' >> ~/.profile
+      echo "alias engen='bash ${ROOT_FS_LOCATION}/engen.sh'" >> ~/.profile
     fi
   fi
 }

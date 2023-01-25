@@ -28,7 +28,7 @@ remove_all_dir_trees_and_installs() {
   echo "CURRENTLY ONLY REMOVES DIRS!"
   echo "---------------------------------------------------"
   echo
-  remove_all_dirs
+  remove_dir_trees
   # remove_all_installs
 }
 
