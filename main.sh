@@ -5,16 +5,14 @@
 
 ROOT_FS_LOCATION=""
 
-function get_engen_fs_location() {
-  if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
-    local REMOVED_FINAL_DIR
-    REMOVED_FINAL_DIR="$(cd "$(dirname "${0}")" && pwd)"
-    echo export ENGEN_FS_LOCATION="'${REMOVED_FINAL_DIR}'" >> ~/.profile
-    echo "${REMOVED_FINAL_DIR}"
-  fi
-}
+if [[ -z $(grep "ENGEN_FS_LOCATION" ~/.profile) ]] ; then
+  REMOVED_FINAL_DIR="$(cd "$(dirname "${0}")" && pwd)"
+  echo export ENGEN_FS_LOCATION="'${REMOVED_FINAL_DIR}'" >> ~/.profile
+fi
+
 
 if [[ -z ${ROOT_FS_LOCATION} ]]; then
+  source ~/.profile
   ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
 fi
 

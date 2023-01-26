@@ -81,21 +81,24 @@ set_base_directory_name() {
   echo "Would you like to generate an environment from an existing config file?"
   echo -n "'y' or 'n': "
   read -r ENV_BOOL
+  CASE_INSENSITIVE_BOOL=$(echo "$ENV_BOOL" | tr '[:upper:]' '[:lower:]')
 
   while "true"
   do
-    if [[ "${ENV_BOOL,,}" == "y" ]] || [[ "${ENV_BOOL,,}" == "n" ]] ; then
+    if [[ "${CASE_INSENSITIVE_BOOL}" == "y" ]] || [[ "${CASE_INSENSITIVE_BOOL}" == "n" ]] ; then
       break
     else
       echo "Invalid input! Input must be 'y' or 'n'"
+      echo "You entered: ${CASE_INSENSITIVE_BOOL}"
       echo
       echo "Would you like to generate an environment from an existing config file?"
       echo -n "'y' or 'n': "
       read -r ENV_BOOL
+      CASE_INSENSITIVE_BOOL=$(echo "$ENV_BOOL" | tr '[:upper:]' '[:lower:]')
     fi
   done
 
-  if [[ "${ENV_BOOL,,}" == "y" ]] ; then
+  if [[ "${CASE_INSENSITIVE_BOOL}" == "y" ]] ; then
     echo
     echo "Enter only the base directory name(suffix of your config file)"
     echo "EX: '.engenrc_baseDirectorySuffix' <-- part after the underscore"
@@ -107,10 +110,11 @@ set_base_directory_name() {
     # use depth search to find config file "find $HOME -maxdepth 2 -type f | grep 'ROOT_ENV'"
     # build_config_file
     EXISTING_CONFIG="$(print_file_system_search "${HOME}" "$(build_config_file "${EXISTING_CONFIG_SUFFIX}")" "f")"
+    echo "EXISTING_CONFIG: ${EXISTING_CONFIG}"
     CURRENT_BASE_DIR="$(readlink -m "${HOME}/""${EXISTING_CONFIG_SUFFIX}")"
     # check git creds or prompt for them here
     config_git_creds_and_auth "${EXISTING_CONFIG}"
-  elif [[ "${ENV_BOOL,,}" == "n" ]] ; then
+  elif [[ "${CASE_INSENSITIVE_BOOL}" == "n" ]] ; then
     echo
     echo "========================================================================================="
     echo "================= [--Set the name of the environment's base directory--] ================"
@@ -252,6 +256,7 @@ create_directories() {
     echo "${CURRENT_BASE_DIR} ..."
     echo
     IFS="/" read -r -a DIR_NAMES <<< ${CURRENT_BASE_DIR}
+    source ~/.profile
     BASE_DIR_NAME=""
     if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then
       BASE_DIR_NAME="${DIR_NAMES[4]}"

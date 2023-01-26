@@ -37,6 +37,8 @@ files updated with "get_engen_fs_location" and "build_config_file"
   - [] will need to source ~/.profile after ROOT_ENV_OS is derived in initial_checks
   - [] /home/vnly/engen/env-creation/generate_directory_tree.sh: line 184: .engenrc_PracticeSpace: No such file or directory
     - when trying to create env(fix this)
+  - [] build_config_file not generating config file structure in generate_directory_tree.sh (likely incorrect param issue)
+  - [] issue with sed (likely issue with not being in bash version 4+) in generate_config_file.sh
 
 
 [x] use reference to pwd for relative imports and for pointint to where main, and engen are in the

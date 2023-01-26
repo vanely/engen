@@ -8,6 +8,7 @@
 
 # check that scoop package manager is installed for windows
 check_and_install_scoop() {
+  source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then
     if [[ -n "$(which scoop)" ]] ; then
       echo "Scoop has already been installed"
@@ -25,6 +26,7 @@ check_and_install_scoop() {
 
 # check that chocolatey package manager is installed for windows
 check_and_install_chocolatey() {
+  source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then
     if [[ -n "$(which choco)" ]] ; then
       echo "Chocolatey has already been installed"
@@ -57,6 +59,7 @@ check_and_install_snapd_package_manager() {
 
 # check that home brew is installed(Mac OS specific)
 check_and_install_homebrew() {
+  source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Darwin" ]] ; then
     if [[ -n "$(which brew)" ]] ; then
       echo "Homebrew has already been installed."
@@ -77,7 +80,7 @@ check_and_install_homebrew() {
 # check that git is installed, and version
 check_and_install_git() {
   GIT_VERSION_ARRAY=($(git --version))
-  
+  source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Darwin" ]] ; then
     check_and_install_homebrew
     if [[ -n "$(which git)" ]] ; then
@@ -159,6 +162,7 @@ check_and_install_curl() {
 # gh Github CLI(can create PRs, Repos, and other git flows without accessing website)
 # VERIFIED
 check_and_install_gh() {
+  source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Darwin" ]] ; then
     if [[ -n $(gh --version) ]] ; then
       echo "gh(github CLI) has already been installed."

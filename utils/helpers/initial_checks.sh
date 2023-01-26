@@ -104,6 +104,7 @@ config_git_creds_and_auth() {
     # git config --global credential.helper cache
   fi
 
+  source ~/.profile
   #  Only an issue on Linux do OS check here
   if [[ "${ROOT_ENV_OS}" == "Linux" ]] ; then
     check_and_install_gnome_keyring
@@ -128,8 +129,10 @@ config_git_creds_and_auth() {
 
 # check that bash version is over 4
 check_and_update_bash() {
+  source ~/.profile
   # NOTE: on mac and linux make sure to navigate to /bin/bash, and /usr/local/bin/bash and check which version is highest, if there are 2
   os_specific_update() {
+    source ~/.profile
     if [[ "${ROOT_ENV_OS}" == "Linux" ]] ; then
       echo "/////////////////////////////// PREPARING TO UPDATE BASH ////////////////////////////////"
       echo "Updating bash for Linux"
@@ -150,7 +153,8 @@ check_and_update_bash() {
       echo "Updating bash for MAC-OS"
       echo "_________________________________________________________________________________________"
       # Update bash and everything else
-      brew upgrade 
+      # brew upgrade
+      brew install bash 
     else
       echo "/////////////////////////////// PREPARING TO UPDATE BASH ////////////////////////////////"
       echo "Updating bash for Windows"
@@ -161,9 +165,9 @@ check_and_update_bash() {
 
   # check os and update relative to os
   CURRENT_BASH_VERSION_ARRAY=($(bash --version))
-  IFS='.' read -ra CURRENT_BASH_VERSION_NUM_ARRAY <<< ${CURRENT_BASH_VERSION_ARRAY[3]}
+  IFS="." read -ra MAJOR MINOR PATCH <<< "$CURRENT_BASH_VERSION_ARRAY[3]"
   
-  if [[ "${CURRENT_BASH_VERSION_NUM_ARRAY[0]}" -lt '4' ]] ; then 
+  if [[ "${MAJOR}" -lt '4' ]] ; then 
     echo "Bash is not at version 4^"
     os_specific_update
   else

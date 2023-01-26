@@ -16,10 +16,11 @@ get_or_prompt_for_git_creds() {
     echo "for connecting your repos to configured directories?"
     echo -n "'y' or 'n': "
     read -r GIT_BOOL
+    CASE_INSENSITIVE_BOOL=$(echo "$GIT_BOOL" | tr '[:upper:]' '[:lower:]')
 
     while "true"
     do
-      if [[ "${GIT_BOOL,,}" == "y" ]] || [[ "${GIT_BOOL,,}" == "n" ]] ; then
+      if [[ "${CASE_INSENSITIVE_BOOL}" == "y" ]] || [[ "${CASE_INSENSITIVE_BOOL}" == "n" ]] ; then
         break
       else
         echo "Invalid input! Input must be 'y' or 'n'"
@@ -28,10 +29,11 @@ get_or_prompt_for_git_creds() {
         echo "for connecting your repos to configured directories?"
         echo -n "'y' or 'n': "
         read -r GIT_BOOL
+        CASE_INSENSITIVE_BOOL=$(echo "$GIT_BOOL" | tr '[:upper:]' '[:lower:]')
       fi
     done
 
-    if [[ "${GIT_BOOL,,}" == "y" ]] ; then
+    if [[ "${CASE_INSENSITIVE_BOOL}" == "y" ]] ; then
       echo
       echo -n "Github user name: "
       read -r USER_NAME
@@ -46,13 +48,16 @@ get_or_prompt_for_git_creds() {
 
 # arg1=ROOT_ENV_DIR_NAME 
 generate_config_file() {
+  source ~/.profile
+  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
+
   # change to ".engenrc_${1}" omit the ".sh"
   CONFIG_FILE_NAME=".engenrc_${1}"
 
   # copy the template, and add the name of the new dir tree to it
   # paths here needs to also be relative to main.sh execution script
   # copy ""./config-file-templates/.engenrc_template"
-  cp ./config-file-templates/.engenrc_template "./config-file-templates/${CONFIG_FILE_NAME}"
+  cp "${ROOT_FS_LOCATION}/config-file-templates/.engenrc_template" "${ROOT_FS_LOCATION}/config-file-templates/${CONFIG_FILE_NAME}"
 
   ROOT_ENV_DIR_PATH="'${HOME}/${1}'"
 
@@ -60,10 +65,10 @@ generate_config_file() {
   get_or_prompt_for_git_creds
   # make sure to use different delimeter when "/"s are included in replace text or escape the "/"
   # git creds
-  sed -i s/CURRENT_GIT_USER_NAME=/CURRENT_GIT_USER_NAME="${GIT_USER}"/ ./config-file-templates/"${CONFIG_FILE_NAME}"
-  sed -i s/CURRENT_GIT_EMAIL=/CURRENT_GIT_EMAIL="${GIT_EMAIL}"/ ./config-file-templates/"${CONFIG_FILE_NAME}"
+  sed -i s/CURRENT_GIT_USER_NAME=/CURRENT_GIT_USER_NAME="${GIT_USER}"/ "${ROOT_FS_LOCATION}"/config-file-templates/"${CONFIG_FILE_NAME}"
+  sed -i s/CURRENT_GIT_EMAIL=/CURRENT_GIT_EMAIL="${GIT_EMAIL}"/ "${ROOT_FS_LOCATION}"/config-file-templates/"${CONFIG_FILE_NAME}"
   # path info  sed -i s+CURATH=+CURRENT_BASE_DIR_PATH="${ROOT_ENV_DIR_PATHig--templates/"${CONFIG_FILE_NAME}"
-  sed -i s/CURRENT_BASE_DIR_NAME=/CURRENT_BASE_DIR_NAME="${1}"/ ./config-file-templates/"${CONFIG_FILE_NAME}"
+  sed -i s/CURRENT_BASE_DIR_NAME=/CURRENT_BASE_DIR_NAME="${1}"/ "${ROOT_FS_LOCATION}"/config-file-templates/"${CONFIG_FILE_NAME}"
 
   # move generated config to home dir
   # file search

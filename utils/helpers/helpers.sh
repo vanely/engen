@@ -27,7 +27,8 @@ file_or_directory_exists() {
 
 #arg1=root_dir_name
 build_config_file() {
-  local root_dir_name="${1}"
+  local root_dir_name
+  root_dir_name="${1}"
   echo ".engenrc_${root_dir_name}"
 }
 
