@@ -34,10 +34,11 @@ files updated with "get_engen_fs_location" and "build_config_file"
 - [x] engen.sh
   - [x] when "main.sh" is called from engen, make sure "get_engen_fs_location" is used to derive it's location
 - [] once all files have been updated, manually smoke test the creation and updating of env using "./main.sh" and "engen" command
-  - [] will need to source ~/.profile after ROOT_ENV_OS is derived in initial_checks
+  - [x] will need to source ~/.profile after ROOT_ENV_OS is derived in initial_checks
   - [] /home/vnly/engen/env-creation/generate_directory_tree.sh: line 184: .engenrc_PracticeSpace: No such file or directory
     - when trying to create env(fix this)
-  - [] build_config_file not generating config file structure in generate_directory_tree.sh (likely incorrect param issue)
+    - [] seems to partially because of how "readlink -m" is being used. Error is that -m is an invalid option (likely another version related issue test on other machine)
+    - [] build_config_file not generating config file structure in generate_directory_tree.sh (likely incorrect param issue)
   - [] issue with sed (likely issue with not being in bash version 4+) in generate_config_file.sh
 
 

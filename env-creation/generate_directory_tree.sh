@@ -241,7 +241,7 @@ create_directories() {
       echo "It seems you might not have a 'BASE_DIR_ARRAY' variable in your config file"
     fi
   }
-  
+
   if [[ -n ${EXISTING_CONFIG} ]] ; then
     # generate from existing config
     echo
