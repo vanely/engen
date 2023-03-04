@@ -1,0 +1,49 @@
+#!/bin/bash
+PATH_TO_REMOVE=${1}
+
+#arg1="path/to/remove"
+remove_dir_from_path() {
+  local PATH_COPY=${PATH}
+  local DIR_IN_PATH="false"
+  local NEW_PATH=""
+  IFS=":" read -r path_arr <<< ${PATH_COPY}
+
+  local structured_arr=(${path_arr})
+  local arr_len=${#structured_arr[@]}
+  local last_item="${structured_arr[${arr_len} - 1]}"
+
+  if [[ -z ${PATH_TO_REMOVE} ]]; then
+    echo "This command requires an argument"
+    echo "Expected argument is a directory that exists in your 'PATH'"
+    echo
+    echo "EX: rmpath \"/path/to/exclude\""
+    echo
+    echo "The output will be a list of paths, excluding the one passed in to the command"
+    echo "This output can become the value of your PATH variable"
+    echo
+    echo 'EX: PATH=$(rmpath /path/to/exclude)'
+  else
+    for p in ${path_arr};
+    do
+      if [[ "${p}" == "${PATH_TO_REMOVE}"  ]]; then
+        DIR_IN_PATH="true"
+      fi
+    done
+
+    if [[ "${DIR_IN_PATH}" == "false" ]]; then
+      echo "The directory \"${PATH_TO_REMOVE}\" is not in PATH"
+    else
+      for path in ${path_arr};
+      do
+        if [[ ${path} == "${PATH_TO_REMOVE}" ]]; then
+          continue
+        fi
+        if [[ "${path}" == "${last_item}" ]]; then
+          NEW_PATH+="${path}"
+        else
+          NEW_PATH+="${path}:"
+        fi      done
+      echo "${NEW_PATH}"
+    fi
+  fi
+}

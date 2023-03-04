@@ -1,0 +1,12 @@
+#!/bin/bash
+
+list_path_var_vertically() {
+  local PATH_COPY=${PATH}
+  IFS=":" read -r path_arr <<< ${PATH_COPY}
+  for path in ${path_arr};
+  do
+    echo ${path}
+  done
+}
+
+list_path_var_vertically

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/opt/homebrew/bin/bash
 
 # so far it seems like or imports, I have to add this function at the top of every file
 # is it then worth it to pass this reference to the below scripts
