@@ -69,6 +69,7 @@ generate_config_file() {
   sed -i s/CURRENT_GIT_EMAIL=/CURRENT_GIT_EMAIL="${GIT_EMAIL}"/ "${ROOT_FS_LOCATION}"/config-file-templates/"${CONFIG_FILE_NAME}"
   # path info  sed -i s+CURATH=+CURRENT_BASE_DIR_PATH="${ROOT_ENV_DIR_PATHig--templates/"${CONFIG_FILE_NAME}"
   sed -i s/CURRENT_BASE_DIR_NAME=/CURRENT_BASE_DIR_NAME="${1}"/ "${ROOT_FS_LOCATION}"/config-file-templates/"${CONFIG_FILE_NAME}"
+  sed -i s+CURRENT_BASE_DIR_PATH=+CURRENT_BASE_DIR_PATH="${HOME}/${1}"+ "${ROOT_FS_LOCATION}"/config-file-templates/"${CONFIG_FILE_NAME}"
 
   # move generated config to home dir
   # file search

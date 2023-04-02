@@ -172,6 +172,7 @@ set_base_directory_name() {
       make_root_dir_global "${BASE}"
     fi
   
+    echo "[--DEBUG--]: Current BASE dir name: ${BASE}"
     # generate config file
     generate_config_file "${BASE}"
   fi
@@ -185,6 +186,7 @@ create_directories() {
   # arg1=CONFIG_FILE arg2=existing || new
   create_and_update_dir_paths() {
     # source config file /home/<user>/ROOT_ENV_CONFIG_<ROOT_ENV_DIR_NAME>
+    echo "[--DEBUG--]: Sourcing new or existing config: ${1}"
     source "${1}"
     # iterate through base dir array in config file, and create all
     if [[ -n "${BASE_DIR_ARRAY}" ]] ; then 
@@ -225,20 +227,26 @@ create_directories() {
         fi
       else
         echo "It seems you might not have a CURRENT_BASE_DIR_PATH in your config file"
+        exit
       fi
 
       echo "========================================================================================="
       echo "=================== [--CLONING PROJECTS TO RESPECTIVE DIRECTORIES--] ===================="
       echo "========================================================================================="
       echo
+      echo "[--DEBUG--]: DIR_ARRAY from config: ${DIR_ARRAY}"
+      echo "[--DEBUG--]: CORRESPONDING_PROJECTS_ARRAY from config: ${CORRESPONDING_PROJECTS_ARRAY}"
       if [[ -n "${DIR_ARRAY}" ]] && [[ -n "${CORRESPONDING_PROJECTS_ARRAY}" ]] ; then
         # consumes config file path
+        echo "[--DEBUG--]: Sourcing config for update: ${1}"
         update_dir_tree "${1}"
       else
         echo "It seems you might not have a 'DIR_ARRAY', and/or a CORRESPONDING_PROJECTS_ARRAY variable(s) in your config file"
+        exit
       fi
     else
       echo "It seems you might not have a 'BASE_DIR_ARRAY' variable in your config file"
+      exit
     fi
   }
 
@@ -263,7 +271,9 @@ create_directories() {
     else
       BASE_DIR_NAME="${DIR_NAMES[3]}"
     fi
-    create_and_update_dir_paths "$(build_config_file "${BASE_DIR_NAME}")" "new"
+    echo "[--DEBUG--]: calling 'create_and_update_dir_paths' with params: "
+    echo "${HOME}/$(build_config_file "${BASE_DIR_NAME}"), new"
+    create_and_update_dir_paths "${HOME}/$(build_config_file "${BASE_DIR_NAME}")" "new"
     echo
     echo "NOTE: config file in home directory: ${HOME}/$(build_config_file "${BASE_DIR_NAME}")"
     echo
