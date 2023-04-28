@@ -528,6 +528,49 @@ check_and_install_discord() {
   fi
 }
 
+check_and_install_nvm() {
+  # Linux/ Mac installs:
+  # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  # or
+  # wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  check_and_install_curl
+  echo "////////////////////////////// PREPARING TO INSTALL NVM /////////////////////////////"
+  if [[ -n $(which nvm) ]] ; then
+    echo "NVM has already been installed."
+    echo "_________________________________________________________________________________________"
+    echo
+  else
+    echo "Installing NVM:"
+    echo "_________________________________________________________________________________________"
+    echo
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+    if [[ -f ~/.zshrc ]] && [[ -f ~/.profile ]] ; then
+      echo "Exposing NVM export from existing .profile config"
+      # echo export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" >> ~/.profile
+      # echo [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" >> ~/.profile
+      echo export NVM_DIR="$HOME/.nvm" >> ~/.profile
+      echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.profile
+      echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'  >> ~/.profile
+      echo
+      echo "Sourcing ~/.zshrc"
+      source ~/.zshrc
+    elif [[ -f ~/.zshrc ]] && [[ ! -f ~/.profile ]] ; then
+      echo "Exposing NVM export from newly created .profile config"
+      touch ~/.profile
+      # echo export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" >> ~/.profile
+      # echo [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" >> ~/.profile
+      echo export NVM_DIR="$HOME/.nvm" >> ~/.profile
+      echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.profile
+      echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'  >> ~/.profile
+      echo source ~/.profile >> ~/.zshrc
+      echo
+      echo "Sourcing ~/.zshrc"
+      source ~/.zshrc
+    fi
+  fi
+}
+
 # npm global packages
 install_global_npm_packages() {
   echo "////////////////////// PREPARING TO GLOBALLY INSTALL NPM PACKAGES ///////////////////////"
@@ -558,6 +601,7 @@ install_all_programs() {
   check_and_install_google_chrome ;
   check_and_install_slack ;
   check_and_install_discord ;
+  check_and_install_nvm ;
   install_global_npm_packages ;
 }
 
@@ -580,7 +624,8 @@ FUNCTIONS_ARRAY=(
   check_and_install_beekeeper_studio
   check_and_install_google_chrome
   check_and_install_slack
-  check_and_install_discord 
+  check_and_install_discord
+  check_and_install_nvm
   install_global_npm_packages
 )
 
@@ -604,5 +649,6 @@ PROGRAM_NAMES_ARRAY=(
   'Google Chrome'
   'Slack'
   'Discord'
+  'NVM'
   'Global NPM Packages'
 )
