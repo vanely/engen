@@ -455,6 +455,49 @@ check_and_install_beekeeper_studio() {
   fi
 }
 
+# Mongo Compass
+# VERIFIED
+# Doesn't work on ubuntu(mongo compass specific issue[segementation fault])
+check_and_install_mongo_compass() {
+  echo "////////////////////////////// PREPARING TO INSTALL NVM /////////////////////////////"
+  if [[ -n $(which mongodb-compass) ]] ; then
+    echo "mongodb-compass has already been installed."
+    echo "_________________________________________________________________________________________"
+    echo
+  else
+    echo "Installing NVM:"
+    echo "_________________________________________________________________________________________"
+    echo
+    wget https://downloads.mongodb.com/compass/mongodb-compass_1.15.1_amd64.deb
+    sudo dpkg -i mongodb-compass_1.15.1_amd64.deb
+    sudo apt --fix-broken install  # if you get any broken dependency error
+    sudo apt-get update
+    sudo apt-get install -y libgconf-2-4
+    # run with 'mongodb-compass'
+  fi
+}
+
+check_and_install_dbschema() {
+  echo "////////////////////////////// PREPARING TO INSTALL DBSCHEMA /////////////////////////////"
+  if [[ -n $(which DbSchema) ]] ; then
+    echo "DbSchema has already been installed."
+    echo "_________________________________________________________________________________________"
+    echo
+  else
+    local current_dir=$(pwd)
+    echo "Installing DbSchema:"
+    echo "_________________________________________________________________________________________"
+    echo
+    cd ~/Downloads || "---NO SUCH DIRECTORY |~/Downloads|---" ; exit
+    wget https://dbschema.com/download/DbSchema_linux_9_4_0.deb
+    sudo dpkg -i DbSchema_linux_9_4_0.deb
+    # sudo apt --fix-broken install  # if you get any broken dependency error
+    sudo apt-get update
+    echo "--- returning to previous context ---"
+    cd "${current_dir}" || "---NO SUCH DIRECTORY |~/Downloads|---" ; exit
+  fi
+}
+
 # google chrome
 # VERIFIED
 check_and_install_google_chrome() {
@@ -528,6 +571,8 @@ check_and_install_discord() {
   fi
 }
 
+# NVM
+# VERIFIED
 check_and_install_nvm() {
   # Linux/ Mac installs:
   # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
@@ -595,6 +640,7 @@ install_all_programs() {
   check_and_install_insomnia ;
   check_and_install_postman ;
   check_and_install_mongodb ;
+  check_and_install_mongo_compass ;
   check_and_install_postgresql ;
   check_and_install_robo3t ;
   check_and_install_beekeeper_studio ;
@@ -619,6 +665,7 @@ FUNCTIONS_ARRAY=(
   check_and_install_insomnia
   check_and_install_postman
   check_and_install_mongodb
+  check_and_install_mongo_compass
   check_and_install_postgresql
   check_and_install_robo3t
   check_and_install_beekeeper_studio
@@ -643,6 +690,7 @@ PROGRAM_NAMES_ARRAY=(
   'Insomnia'
   'Postman'
   'MongoDB'
+  'MongoDB Compass'
   'PostgreSQL'
   'Robo 3t'
   'Beekeeper Studio'

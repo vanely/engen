@@ -16,7 +16,6 @@ source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 # TO ADD
 
 # Back & Forward Buttons - nick-rudenko.back-n-forth 
-
 EXTENSIONS_LIST_IDS=(
   azuretools.vscode-docker
   bungcip.better-toml
@@ -32,6 +31,7 @@ EXTENSIONS_LIST_IDS=(
   mads-hartmann.bash-ide-vscode
   massi.javascript-docstrings
   matklad.rust-analyzer
+  mongodb.mongodb-vscode
   monokai.theme-monokai-pro-vscode
   mooman219.rust-assist
   ms-vscode.powershell
@@ -70,6 +70,7 @@ EXTENSIONS_LIST_NAMES=(
   'Bash_IDE'
   'JavaScript_Docstrings'
   'Rust_Analyzer'
+  'MongoDB Visualizer For VSCode'
   'Monokai_Pro'
   'Rust_Assist'
   'PowerShell_Support'
