@@ -18,6 +18,7 @@ source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
 # Back & Forward Buttons - nick-rudenko.back-n-forth 
 EXTENSIONS_LIST_IDS=(
   azuretools.vscode-docker
+  blackboxapp.blackbox
   bungcip.better-toml
   christian-kohler.path-intellisense
   coenraads.bracket-pair-colorizer-2
@@ -41,6 +42,7 @@ EXTENSIONS_LIST_IDS=(
   ritwickdey.liveserver
   rogalmic.bash-debug
   rust-lang.rust
+  rangav.vscode-thunder-client
   timonwong.shellcheck
 
   ############################### THEMES ###############################
@@ -57,6 +59,7 @@ EXTENSIONS_LIST_IDS=(
 
 EXTENSIONS_LIST_NAMES=(
   'Docker'
+  'BlackBox(AI Code Helper)'
   'Better_TOML'
   'Path_Intellisense'
   'Bracket_Pair_Colorizer_2'
@@ -80,6 +83,7 @@ EXTENSIONS_LIST_NAMES=(
   'Live_Server'
   'Bash_Debug'
   'Rust'
+  'Thunder Client(Requests to API)'
   'SpellCheck'
 
   ############################### THEMES ###############################
