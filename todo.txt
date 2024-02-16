@@ -1,3 +1,15 @@
+checking bash version
+[] automate modification to /etc/shells config for setting new path for default bash shell to be the homebrew installed version
+  - this modification does require sudo access, so make sure to run the modifying command with sudo, and make the user aware of what's being done.
+
+cloning repos based on public or private visibility: https://cli.github.com/manual/gh_search_repos 
+[] allow private repos to be checked before clone --> echo $(gh search repos --match name Transient --owner vanely --visibility public)
+  - if the repo is public, the commant doesn't return anything, if it's private the repo name and it's visibility and creation date is output:
+  - echo $(gh search repos --match name Transient --owner vanely --visibility private)
+    - "vanely/Transient private 2024-02-14T18:41:55Z"
+  - echo $(gh search repos --match name Transient --owner vanely --visibility public)
+    - ""
+
 adding relative paths(this will be similar to the work done on depth search)
 [x] pass a variable from the main script that is a reference to pwd
   - this will store a path trace from home to engen

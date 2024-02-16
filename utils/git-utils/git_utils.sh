@@ -61,7 +61,7 @@ check_status_of_working_tree() {
 
 github_auth() {
   # find some way to safely access sensitive token/ or remove
-  # file search
+  # file search (make this a file that can be pointed to by path)
   if [[ -f "${ROOT_FS_LOCATION}/utils/git-utils/tokenFile.txt" ]] ; then 
     gh auth login --with-token < "${ROOT_FS_LOCATION}/utils/git-utils/tokenFile.txt"
   else
