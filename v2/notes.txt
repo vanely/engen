@@ -1,0 +1,6 @@
+[] may keep vscode extension lib in bash
+  - try to implement in python
+
+[] 1. start by implementing dir tree generator from config file, into home dir
+  - may need to leave a note that dir tree can be extended by updating config file, and running update.\
+  
