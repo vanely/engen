@@ -1,7 +1,15 @@
 #!/bin/bash
 
+<<<<<<< Updated upstream
 # so far it seems like or imports, I have to add this function at the top of every file
 # is it then worth it to pass this reference to the below scripts
+=======
+# optional script arg1=ROOT_ENV_DIR_NAME 
+CONTEXT_ROOT_DIR_NAME="${1}"
+
+# root dir location in file system
+ROOT_PATH="${PWD}"
+>>>>>>> Stashed changes
 
 # Function to derive the directory location of the script
 get_script_dir() {
@@ -69,9 +77,6 @@ import_script "utils/git-utils/main.sh"
 import_script "utils/helpers/vscode_extensions.sh"
 import_script "utils/helpers/validation.sh"
 import_script "utils/helpers/helpers.sh"
-
-# can either be 
-CONTEXT_ROOT_DIR_NAME="${1}"
 
 # similar to array of programs to install, present a choice of which main scripts to run
 # [x] create directory tree

@@ -74,6 +74,7 @@ function engen() {
   trap leave_script SIGINT
 
   # command help options
+  # TODO: convert these conditions to switch case
   if [[ "${DIR_NAME}" == "-h" ]] || [[ "${DIR_NAME}" == "--help" ]] ; then
     echo "Existing base directories are shown by name and will be the context for the engen command"
     echo "_________________________________________________________________________________________"
