@@ -1,16 +1,5 @@
 #!/bin/bash
 
-<<<<<<< Updated upstream
-# so far it seems like or imports, I have to add this function at the top of every file
-# is it then worth it to pass this reference to the below scripts
-=======
-# optional script arg1=ROOT_ENV_DIR_NAME 
-CONTEXT_ROOT_DIR_NAME="${1}"
-
-# root dir location in file system
-ROOT_PATH="${PWD}"
->>>>>>> Stashed changes
-
 # Function to derive the directory location of the script
 get_script_dir() {
   local script_path="${BASH_SOURCE[0]}"
@@ -52,22 +41,6 @@ import_script() {
     echo "Error: Unable to source script. File not found: $script_path"
   fi
 }
-# # spellcheck source="${ROOT_FS_LOCATION}/env-creation/generate_directory_tree.sh"
-# source "${ROOT_FS_LOCATION}/env-creation/generate_directory_tree.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/env-creation/directories.sh"
-# source "${ROOT_FS_LOCATION}/env-creation/directories.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/programs-to-install/linux/choose_programs_and_install.sh"
-# source "${ROOT_FS_LOCATION}/programs-to-install/linux/choose_programs_and_install.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/utils/cleanup/main.sh"
-# source "${ROOT_FS_LOCATION}/utils/cleanup/main.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/utils/git-utils/main.sh"
-# source "${ROOT_FS_LOCATION}/utils/git-utils/main.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/utils/helpers/vscode_extensions.sh"
-# source "${ROOT_FS_LOCATION}/utils/helpers/vscode_extensions.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
-# source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
-# # spellcheck source="${ROOT_FS_LOCATION}/utils/helpers/helpers.sh"
-# source "${ROOT_FS_LOCATION}/utils/helpers/helpers.sh"
 
 import_script "env-creation/generate_directory_tree.sh"
 import_script "env-creation/directories.sh"
