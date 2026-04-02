@@ -1,12 +1,7 @@
 #!/bin/bash
 
-ROOT_FS_LOCATION=""
-if [[ -z ${ROOT_FS_LOCATION} ]]; then
-  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
-fi
 
-# spellcheck source=./utils/helpers/validation.sh
-source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
+source "${ENGEN_ROOT}/utils/helpers/validation.sh"
 
 # associative array of extensions
 # declare -A PERSONAL_EXTENSIONS_LIST
@@ -110,7 +105,11 @@ EXTENSIONS_LIST_NAMES=(
   'Material_Gruvbox'
 )
 EXTENSIONS_LIST_NAMES_LEN="${#EXTENSIONS_LIST_NAMES[@]}"
-INSTALLS_ARR=($(code --list-extensions))
+if command -v code &>/dev/null; then
+  INSTALLS_ARR=($(code --list-extensions 2>/dev/null))
+else
+  INSTALLS_ARR=()
+fi
 INSTALLS_LEN="${#INSTALLS_ARR[@]}"
 
 install_all_vscode_extensions() {
@@ -152,7 +151,7 @@ install_all_vscode_extensions() {
   done
 }
 
-choose_extenstions_to_install() {
+choose_extensions_to_install() {
   ALREADY_INSTALLED="false"
 
   echo "========================================================================================="
@@ -194,7 +193,7 @@ choose_extenstions_to_install() {
   echo -n "> "
   read -r indexes
 
-  while "true"
+  while true
   do
     if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
       if [[ ${indexes} == 'all' ]] ; then
@@ -221,4 +220,4 @@ choose_extenstions_to_install() {
 
 }
 
-# choose_extenstions_to_install
+# choose_extensions_to_install

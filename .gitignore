@@ -1,2 +1,19 @@
+# OS
 .DS_Store
-.vscode
+
+# IDE
+.vscode/
+
+# Credentials and tokens
+tokenFile.txt
+*.token
+
+# Generated configs (may contain paths)
+.engenrc_*
+
+# Test output
+utils/test_files/file_to_append_to.txt
+
+# Python
+__pycache__/
+*.pyc

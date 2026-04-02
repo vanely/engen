@@ -1,136 +1,107 @@
 #!/bin/bash
+# ================================================================
+# engen — Batch Git Operations on JSON Config Repos
+# ================================================================
 
-ROOT_FS_LOCATION=""
-if [[ -z ${ROOT_FS_LOCATION} ]]; then
-  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
-fi
+# Update all repos in a JSON config
+update_all_repos() {
+  local config_file="${1}"
 
-# update repositories for directories within generated environment
-# go through all git initialized repos and do a pull
-
-# spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh" 
-source "${ROOT_FS_LOCATION}/utils/git-utils/git_utils.sh"
-# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
-
-#arg1=CONTEXT_ROOT_DIR_NAME consumed from main.sh
-update_all_dirs() {
-  local CURRENT_ROOT_ENV_CONFIG
-  CURRENT_ROOT_ENV_CONFIG="${1}"
-
-  # file search
-  if [[ ! -f "${CURRENT_ROOT_ENV_CONFIG}" ]] ; then
-    echo
-    echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"
-    echo "does not exist"
-    echo
-    echo "Exiting..."
-    kill $$
-  else
-    source "${CURRENT_ROOT_ENV_CONFIG}"
-    local DIR_ARRAY_LEN="${#DIR_ARRAY[@]}"
-
-    for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
-    do
-      update_git_repo "${DIR_ARRAY[i]}"
-    done
-  fi
+  while IFS=' ' read -r repo_dir repo_name; do
+    local target="${repo_dir}/${repo_name}"
+    if [ -d "${target}/.git" ]; then
+      update_git_repo "${target}"
+    fi
+  done < <(json_tree_to_repos "${config_file}")
 }
 
-#arg1=CONTEXT_ROOT_DIR_NAME
-check_all_dirs_status() {
-  local CURRENT_ROOT_ENV_CONFIG
-  CURRENT_ROOT_ENV_CONFIG="${1}"
+# Check status of all repos in a JSON config
+status_all_repos() {
+  local config_file="${1}"
 
-  # file search
-  if [[ ! -f "${CURRENT_ROOT_ENV_CONFIG}" ]] ; then
-    echo
-    echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"
-    echo "does not exist"
-    echo
-    echo "Exiting..."
-    kill $$
-  else
-    source "${CURRENT_ROOT_ENV_CONFIG}"
-    local DIR_ARRAY_LEN="${#DIR_ARRAY[@]}"
-
-    for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
-    do
-      check_status_of_working_tree "${DIR_ARRAY[i]}"
-    done
-  fi
+  while IFS=' ' read -r repo_dir repo_name; do
+    local target="${repo_dir}/${repo_name}"
+    if [ -d "${target}/.git" ]; then
+      check_status_of_working_tree "${target}"
+    fi
+  done < <(json_tree_to_repos "${config_file}")
 }
 
-# updates(pulls) or checks status of git repos in their respective directories
-# arg1=status || update arg2=CONTEXT_ROOT_DIR_NAME
-choose_repos_to_status_or_update() {
-  local CONTEXT_ROOT_DIR_NAME
-  CONTEXT_ROOT_DIR_NAME="${2}"
-  local CURRENT_ROOT_ENV_CONFIG
-  # once context arrives derive config file name here
-  # build_config_file
-  CURRENT_ROOT_ENV_CONFIG="$(build_config_file "${CONTEXT_ROOT_DIR_NAME}")"
+# Interactive repo selection for update or status
+# arg1=operation ("update" or "status")
+choose_repos() {
+  local operation="${1}"
 
-  # REVIEW: BUG!
-  # file search
-  if [[ -z "${CURRENT_ROOT_ENV_CONFIG}" ]] ; then
-    echo
-    echo "The expected config file: ${CURRENT_ROOT_ENV_CONFIG}"
-    echo "does not exist"
-    echo
-    echo "Exiting..."
-    kill $$
+  # Find config
+  local configs=()
+  for f in "${ENGEN_CONFIG_DIR}"/*.json; do
+    [ -f "$f" ] || continue
+    configs+=("$f")
+  done
+
+  if [ ${#configs[@]} -eq 0 ]; then
+    err "No environments found."
+    return 1
+  fi
+
+  local config_file
+  if [ ${#configs[@]} -eq 1 ]; then
+    config_file="${configs[0]}"
   else
-    source "${CURRENT_ROOT_ENV_CONFIG}"
-    local DIR_ARRAY_LEN="${#DIR_ARRAY[@]}"
-
-    echo "all"
-    for (( i=0; i<"${DIR_ARRAY_LEN}"; i++ ))
-    do
-      echo "${i}: ${DIR_NAMES_ARRAY[i]}"
+    bline "Select environment:"
+    for i in "${!configs[@]}"; do
+      local name
+      name=$(json_read "${configs[$i]}" "name" 2>/dev/null)
+      bline "  ${i}: ${name}"
     done
+    local idx
+    idx=$(prompt ">" "0")
+    config_file="${configs[$idx]}"
+  fi
 
-    echo
-    echo "From the list above, select which repo you'd like to update"
-    echo "as 'all', or numbers separated by spaces. EX:"
-    echo "0 1 2"
-    echo
-    echo -n "> "
-    read -r indexes
+  # Get repos
+  local repo_dirs=() repo_names=()
+  while IFS=' ' read -r dir name; do
+    local target="${dir}/${name}"
+    if [ -d "${target}/.git" ]; then
+      repo_dirs+=("${target}")
+      repo_names+=("${name}")
+    fi
+  done < <(json_tree_to_repos "${config_file}")
 
-    while "true"
-    do
-      if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
-        if [[ ${indexes} == 'all' ]] ; then
-          # invoke function to either update or check status based on arg1
-          if [[ ${1} == 'update' ]] ; then
-            update_all_dirs "${CURRENT_ROOT_ENV_CONFIG}"
-          elif [[ ${1} == 'status' ]] ; then
-            check_all_dirs_status "${CURRENT_ROOT_ENV_CONFIG}"
-          else
-            echo 'Invalid argument passed to "choose_repos_to_status_or_update"'
-          fi
-        else
-          for i in ${indexes[@]}
-          do
-            # invoke function to either update or check status based on arg1
-            if [[ ${1} == 'update' ]] ; then
-              update_git_repo ${DIR_ARRAY[i]}
-            elif [[ ${1} == 'status' ]] ; then
-              check_status_of_working_tree ${DIR_ARRAY[i]}
-            else
-              echo 'Invalid argument passed to "choose_repos_to_status_or_update"'
-            fi
-          done
-        fi
-        break
+  if [ ${#repo_names[@]} -eq 0 ]; then
+    warn "No cloned repos found in this environment."
+    return
+  fi
+
+  bline ""
+  bline "Repos:"
+  for i in "${!repo_names[@]}"; do
+    bline "  ${i}: ${repo_names[$i]}"
+  done
+  bline ""
+  local selection
+  selection=$(prompt "Select repos (numbers, or 'all')" "all")
+
+  if [[ "${selection,,}" == "all" ]]; then
+    for dir in "${repo_dirs[@]}"; do
+      if [ "${operation}" == "update" ]; then
+        update_git_repo "${dir}"
       else
-        echo
-        echo "Input must be a number in the above list, or 'all'"
-        echo
-        echo -n "> "
-        read -r indexes
+        check_status_of_working_tree "${dir}"
+      fi
+    done
+  else
+    local indices
+    read -ra indices <<< "${selection}"
+    for idx in "${indices[@]}"; do
+      if is_number "${idx}" && [ "${idx}" -lt ${#repo_dirs[@]} ]; then
+        if [ "${operation}" == "update" ]; then
+          update_git_repo "${repo_dirs[$idx]}"
+        else
+          check_status_of_working_tree "${repo_dirs[$idx]}"
+        fi
       fi
     done
   fi
-}   
+}

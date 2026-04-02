@@ -1,46 +1,42 @@
 #!/bin/bash
 
-ROOT_FS_LOCATION=""
-if [[ -z ${ROOT_FS_LOCATION} ]]; then
-  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
-fi
-
-# pass config context as an arg to this script from main.sh(main will have the context as an optional arg. Account for this)
 
 # clone repos into their respective directories
 # arg1=GIT_REPO_NAME arg2=DIRECTORY_NAME <--- dir to clone repo into
 clone_git_repo() {
-  # derive USER_NAME from .gitconfig
-  # file search
-  if [[ ! -f ~/.gitconfig ]] ; then
-    echo
-    echo "a global reference to your git config is needed to clone repos"
-    echo "you'll need to run the following git commands"
-    echo
-    echo "git config --global user.name '<user_name>'"
-    echo "git config --global user.email '<email>'"
-    echo
-    echo "replace everything inside of the single 'quotes' with your respective credentials"
-    echo
-  else
-    name=($(grep "name" ~/.gitconfig))
-    USER_NAME="${name[2]}"
-    GIT_REPO_TEMPLATE="https://github.com/${USER_NAME}/${1}.git"
-    echo
-    echo "========================================================================================="
-    cd "${2}" || exit
-    echo "Cloning ${GIT_REPO_TEMPLATE} into ${2}"
-    git clone "${GIT_REPO_TEMPLATE}" .
-    echo "========================================================================================="
+  local USER_NAME
+  USER_NAME=$(git_username)
+
+  if [[ -z "${USER_NAME}" ]]; then
+    ensure_git_configured || return 1
+    USER_NAME=$(git_username)
   fi
+
+  local repo_name="${1}"
+  local target_dir="${2}"
+
+  # If repo contains a slash, treat as owner/repo
+  local clone_url
+  if [[ "${repo_name}" == */* ]]; then
+    clone_url="https://github.com/${repo_name}.git"
+  else
+    clone_url="https://github.com/${USER_NAME}/${repo_name}.git"
+  fi
+
+  echo ""
+  echo "========================================================================================="
+  cd "${target_dir}" || return 1
+  echo "Cloning ${clone_url} into ${target_dir}"
+  git clone "${clone_url}" .
+  echo "========================================================================================="
 }
 
 # updates(pulls) git repos in their respective directories
 # arg1=DIRECTORY_NAME
 update_git_repo() {
-  echo
+  echo ""
   echo "========================================================================================="
-  cd "${1}" || exit
+  cd "${1}" || return 1
   echo "Updating Local Repo: "
   echo "${1} ..."
   git pull
@@ -50,9 +46,9 @@ update_git_repo() {
 # runs git status on repos in their respective directories
 # arg1=DIRECTORY_NAME
 check_status_of_working_tree() {
-  echo
+  echo ""
   echo "========================================================================================="
-  cd "${1}" || exit
+  cd "${1}" || return 1
   echo "Checking Local Repo Status: "
   echo "${1}..."
   git status
@@ -60,10 +56,8 @@ check_status_of_working_tree() {
 }
 
 github_auth() {
-  # find some way to safely access sensitive token/ or remove
-  # file search (make this a file that can be pointed to by path)
-  if [[ -f "${ROOT_FS_LOCATION}/utils/git-utils/tokenFile.txt" ]] ; then 
-    gh auth login --with-token < "${ROOT_FS_LOCATION}/utils/git-utils/tokenFile.txt"
+  if gh auth status &>/dev/null; then
+    echo "Already authenticated with GitHub."
   else
     gh auth login
   fi

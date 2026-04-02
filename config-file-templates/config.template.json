@@ -1,0 +1,29 @@
+{
+  "name": "",
+  "path": "",
+  "git": {
+    "username": null,
+    "email": null
+  },
+  "tree": {
+    "Challenges": {
+      "Java": {},
+      "JS": {},
+      "Python": {},
+      "Rust": {}
+    },
+    "Projects": {
+      "Web": {},
+      "Tools": {}
+    },
+    "Scripts": {
+      "Bash": {},
+      "Python": {}
+    },
+    "Misc": {},
+    "OpenSource": {}
+  },
+  "tools": {
+    "installed": []
+  }
+}

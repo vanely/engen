@@ -1,14 +1,8 @@
 #!/bin/bash
 
-ROOT_FS_LOCATION=""
-if [[ -z ${ROOT_FS_LOCATION} ]]; then
-  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
-fi
 
-# spellcheck source="${HOME}/engen/programs-to-install/linux/dev_tools_installs.sh"
-source "${ROOT_FS_LOCATION}/programs-to-install/linux/dev_tools_installs.sh"
-# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
+source "${ENGEN_ROOT}/programs-to-install/linux/dev_tools_installs.sh"
+source "${ENGEN_ROOT}/utils/helpers/validation.sh"
 
 PROGRAM_NAMES_ARRAY_LEN="${#PROGRAM_NAMES_ARRAY[@]}"
 
@@ -33,7 +27,7 @@ iteratively_install_programs() {
   echo -n "> "
   read -r indexes
 
-  while "true"
+  while true
   do
     if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] || [[ "$(input_is_the_word_all "${indexes}")" == "true" ]]; then
       if [[ ${indexes} == 'all' ]] ; then

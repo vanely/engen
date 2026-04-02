@@ -10,7 +10,7 @@
 check_and_install_scoop() {
   source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then
-    if [[ -n "$(which scoop)" ]] ; then
+    if command -v scoop &>/dev/null ; then
       echo "Scoop has already been installed"
       echo "_________________________________________________________________________________________"
       echo
@@ -28,7 +28,7 @@ check_and_install_scoop() {
 check_and_install_chocolatey() {
   source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Windows" ]] ; then
-    if [[ -n "$(which choco)" ]] ; then
+    if command -v choco &>/dev/null ; then
       echo "Chocolatey has already been installed"
       echo "_________________________________________________________________________________________"
       echo
@@ -44,7 +44,7 @@ check_and_install_chocolatey() {
 
 # snapd(Linux specific)
 check_and_install_snapd_package_manager() {
-  if [[ -n "$(which snap)" ]] ; then
+  if command -v snap &>/dev/null ; then
     echo "Snap has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -61,7 +61,7 @@ check_and_install_snapd_package_manager() {
 check_and_install_homebrew() {
   source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Darwin" ]] ; then
-    if [[ -n "$(which brew)" ]] ; then
+    if command -v brew &>/dev/null ; then
       echo "Homebrew has already been installed."
       echo "_________________________________________________________________________________________"
       echo
@@ -83,7 +83,7 @@ check_and_install_git() {
   source ~/.profile
   if [[ "${ROOT_ENV_OS}" == "Darwin" ]] ; then
     check_and_install_homebrew
-    if [[ -n "$(which git)" ]] ; then
+    if command -v git &>/dev/null ; then
       echo "Git has already been installed."
       echo "Current version: ${GIT_VERSION_ARRAY[2]}"
       echo "_________________________________________________________________________________________"
@@ -96,7 +96,7 @@ check_and_install_git() {
       brew install git
     fi
   elif [[ "${ROOT_ENV_OS}" == "Linux" ]] ; then
-    if [[ -n "$(which git)" ]] ; then
+    if command -v git &>/dev/null ; then
       echo "Git has already been installed."
       echo "Current version: ${GIT_VERSION_ARRAY[2]}"
       echo "_________________________________________________________________________________________"
@@ -116,7 +116,7 @@ check_and_install_git() {
 
 # make - does not need to be added to install list
 check_and_install_make() {
-  if [[ -n "$(which make)" ]] ; then
+  if command -v make &>/dev/null ; then
     echo "Make has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -131,7 +131,7 @@ check_and_install_make() {
 
 #gcc - does not need to be added to install list
 check_and_install_gcc() {
-  if [[ -n "$(which gcc)" ]] ; then
+  if command -v gcc &>/dev/null ; then
     echo "Gcc has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -146,7 +146,7 @@ check_and_install_gcc() {
 
 # curl
 check_and_install_curl() {
-  if [[ -n "$(which curl)" ]] ; then
+  if command -v curl &>/dev/null ; then
     echo "Curl has already been installed"
     echo "_________________________________________________________________________________________"
     echo

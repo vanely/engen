@@ -1,12 +1,7 @@
 #!/bin/bash
 
-ROOT_FS_LOCATION=""
-if [[ -z ${ROOT_FS_LOCATION} ]]; then
-  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
-fi
 
-# spellcheck source=./programs-to-install/dependencies/dependencies.sh
-source "${ROOT_FS_LOCATION}/programs-to-install/dependencies/dependencies.sh"
+source "${ENGEN_ROOT}/programs-to-install/dependencies/dependencies.sh"
 
 ########################################################################################################
 ############################################### PROGRAMS ###############################################
@@ -15,7 +10,7 @@ source "${ROOT_FS_LOCATION}/programs-to-install/dependencies/dependencies.sh"
 # grub-customizer
 check_and_install_grub_customizer() {
   echo "///////////////////////// PREPARING TO INSTALL GRUB CUSTOMIZER //////////////////////////"
-  if [[ -n "$(which grub-customizer)" ]] ; then
+  if command -v grub-customizer &>/dev/null ; then
     echo "Grub-customizer has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -32,7 +27,7 @@ check_and_install_grub_customizer() {
 # htop
 check_and_install_htop() {
   echo "/////////////////////////////// PREPARING TO INSTALL HTOP ///////////////////////////////"
-  if [[ -n "$(which htop)" ]] ; then
+  if command -v htop &>/dev/null ; then
     echo "Htop has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -47,7 +42,7 @@ check_and_install_htop() {
 # tree graphically displays a dir tree
 check_and_install_tree() {
   echo "/////////////////////////////// PREPARING TO INSTALL TREE ///////////////////////////////"
-  if [[ -n "$(which tree)" ]] ; then
+  if command -v tree &>/dev/null ; then
     echo "Tree has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -64,7 +59,7 @@ check_and_install_tree() {
 check_and_install_rust() {
   check_and_install_curl
   echo "/////////////////////////////// PREPARING TO INSTALL RUST ///////////////////////////////"
-  if [[ -n $(rustc --version) ]] ; then
+  if command -v rustc &>/dev/null ; then
     echo "Rust lang has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -76,7 +71,7 @@ check_and_install_rust() {
     # In the Rust development environment, all tools are installed to the ~/.cargo/bin directory, and this is where you will find the Rust toolchain, including rustc, cargo, and rustup.
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-    if [[ -n $(rustc --version) ]] ; then
+    if command -v rustc &>/dev/null ; then
       if [[ -f ~/.profile ]] && [[ -f ~/.zshrc ]] ; then
         echo export PATH="$HOME/.cargo/bin:$PATH" >> ~/.profile
         source ~/.zshrc
@@ -98,7 +93,7 @@ check_and_install_rust() {
 check_and_install_flutter_and_dart() {
   check_and_install_snapd_package_manager	
   echo "///////////////////////// PREPARING TO INSTALL FLUTTER AND DART /////////////////////////"
-  if [[ -n "$(which flutter)"  ]] ; then
+  if command -v flutter &>/dev/null ; then
     echo "Flutter and Dart have already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -164,14 +159,14 @@ check_and_install_theme.sh() {
   }
 
   echo "///////////////////////////// PREPARING TO INSTALL THEME.SH /////////////////////////////"
-  if [[ -n "$(theme.sh --version)" ]] && [[ -n "$(fzf --version)" ]] ; then
+  if command -v theme.sh &>/dev/null && command -v fzf &>/dev/null ; then
     echo "Theme.sh has already been installed."
     echo "_________________________________________________________________________________________"
     echo
-  elif [[ -z "$(theme.sh --version)" ]] && [[ -n "$(fzf --version)" ]] ; then
+  elif ! command -v theme.sh &>/dev/null && command -v fzf &>/dev/null ; then
     install_theme.sh
   else
-    sudo apt-get istall fzf 
+    sudo apt-get -y install fzf 
     install_theme.sh
   fi
 }
@@ -205,7 +200,7 @@ check_and_install_space_vim() {
 # VERIFIED
 check_and_install_vim() {
   echo "//////////////////////////////// PREPARING TO INSTALL VIM ///////////////////////////////"
-  if [[ -n "$(which vim)" ]] ; then
+  if command -v vim &>/dev/null ; then
     echo "Vim has already been installed"
     echo "_________________________________________________________________________________________"
     echo
@@ -221,7 +216,7 @@ check_and_install_vim() {
 # VERIFIED
 check_and_install_vscode() {
   echo "////////////////////////////// PREPARING TO INSTALL VSCODE //////////////////////////////"
-  if [[ -n $(code --version) ]] ; then
+  if command -v code &>/dev/null ; then
     echo "Visual Studio Code has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -252,7 +247,7 @@ check_and_install_vscode() {
 check_and_install_insomnia() {
   check_and_install_snapd_package_manager
   echo "///////////////////////////// PREPARING TO INSTALL INSOMNIA /////////////////////////////"
-  if [[ -n $(which insomnia) ]] ; then
+  if command -v insomnia &>/dev/null ; then
     echo "Insomnia has already been installed."
     echo "_________________________________________________________________________________________"
     echo 
@@ -272,7 +267,7 @@ check_and_install_insomnia() {
 check_and_install_postman() {
   check_and_install_snapd_package_manager
   echo "////////////////////////////// PREPARING TO INSTALL POSTMAN /////////////////////////////"
-  if [[ -n $(which postman) ]] ; then
+  if command -v postman &>/dev/null ; then
     echo "Postman has already been installed."
     echo "_________________________________________________________________________________________"
     echo 
@@ -291,7 +286,7 @@ check_and_install_postman() {
 # VERIFIED
 check_and_install_mongodb() {
   echo "///////////////////////////// PREPARING TO INSTALL MONGODB //////////////////////////////"
-  if [[ -n $(mongo --version) ]] ; then
+  if command -v mongo &>/dev/null ; then
     echo "MongoDB has already been installed."
     echo "_________________________________________________________________________________________"
     echo 
@@ -301,7 +296,7 @@ check_and_install_mongodb() {
     echo "_________________________________________________________________________________________"
     echo
     sudo apt update ;
-    if [[ -n $(which gpg) ]] ; then
+    if command -v gpg &>/dev/null ; then
       echo "Installing gnupg(GPG):"
       echo "_________________________________________________________________________________________"
       echo
@@ -347,7 +342,7 @@ check_and_install_mongodb() {
 # VERIFIED
 check_and_install_postgresql() {
   echo "//////////////////////////// PREPARING TO INSTALL POSTGRESQL ////////////////////////////"
-  if [[ -n $(psql --version) ]] ; then
+  if command -v psql &>/dev/null ; then
     echo "PostgreSQL has already been installed."
     echo "_________________________________________________________________________________________"
     echo 
@@ -378,7 +373,7 @@ check_and_install_postgresql() {
 check_and_install_robo3t() {
   check_and_install_snapd_package_manager
   echo "////////////////////////////// PREPARING TO INSTALL ROBO-3T /////////////////////////////"
-  if [[ -n $(which robo3t) ]] ; then
+  if command -v robo3t&>/dev/null ; then
     echo "Robo3t has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -440,7 +435,7 @@ check_and_install_robo3t() {
 check_and_install_beekeeper_studio() {
   check_and_install_snapd_package_manager
   echo "///////////////////////// PREPARING TO INSTALL BEEKEEPER STUDIO /////////////////////////"
-  if [[ -n $(which beekeeper-studio) ]] ; then
+  if command -v beekeeper-studio &>/dev/null ; then
     echo "Beekeeper Studio has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -460,7 +455,7 @@ check_and_install_beekeeper_studio() {
 # Doesn't work on ubuntu(mongo compass specific issue[segementation fault])
 check_and_install_mongo_compass() {
   echo "////////////////////////////// PREPARING TO INSTALL NVM /////////////////////////////"
-  if [[ -n $(which mongodb-compass) ]] ; then
+  if command -v mongodb-compass &>/dev/null ; then
     echo "mongodb-compass has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -479,7 +474,7 @@ check_and_install_mongo_compass() {
 
 check_and_install_dbschema() {
   echo "////////////////////////////// PREPARING TO INSTALL DBSCHEMA /////////////////////////////"
-  if [[ -n $(which DbSchema) ]] ; then
+  if command -v DbSchema &>/dev/null ; then
     echo "DbSchema has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -513,12 +508,12 @@ check_and_install_google_chrome() {
 
   echo "////////////////////////// PREPARING TO INSTALL GOOGLE CHROME ///////////////////////////"
   
-  if [[ -n $(google-chrome-stable --version) ]] ; then
+  if command -v google-chrome-stable &>/dev/null ; then
     echo "Google Chrome has already been installed."
     echo "_________________________________________________________________________________________"
     echo
   else
-    if [[ -n $(which wget) ]] ; then
+    if command -v wget &>/dev/null ; then
       echo "Installing Google Chrome:"
       echo "_________________________________________________________________________________________"
       echo
@@ -538,7 +533,7 @@ check_and_install_google_chrome() {
 check_and_install_slack() {
   check_and_install_snapd_package_manager
   echo "/////////////////////////////// PREPARING TO INSTALL SLACK //////////////////////////////"
-  if [[ -n $(which slack) ]] ; then
+  if command -v slack &>/dev/null ; then
     echo "Slack has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -557,7 +552,7 @@ check_and_install_slack() {
 check_and_install_discord() {
   check_and_install_snapd_package_manager
   echo "////////////////////////////// PREPARING TO INSTALL discord /////////////////////////////"
-  if [[ -n $(which discord) ]] ; then
+  if command -v discord &>/dev/null ; then
     echo "Discord has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -580,7 +575,7 @@ check_and_install_nvm() {
   # wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
   check_and_install_curl
   echo "////////////////////////////// PREPARING TO INSTALL NVM /////////////////////////////"
-  if [[ -n $(which nvm) ]] ; then
+  if command -v nvm &>/dev/null ; then
     echo "NVM has already been installed."
     echo "_________________________________________________________________________________________"
     echo
@@ -620,83 +615,283 @@ check_and_install_nvm() {
 install_global_npm_packages() {
   echo "////////////////////// PREPARING TO GLOBALLY INSTALL NPM PACKAGES ///////////////////////"
   echo "NO GLOBAL PACKAGES SPECIFIED YET"
-  # typescript tsc
-  # serverless
-  # aws-sdk
+}
+
+########################################################################################################
+############################################## MODERN TOOLS ############################################
+########################################################################################################
+
+# Docker Engine
+check_and_install_docker() {
+  echo "///////////////////////// PREPARING TO INSTALL DOCKER //////////////////////////"
+  if command -v docker &>/dev/null ; then
+    echo "Docker is already installed: $(docker --version)"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing Docker Engine..."
+    echo "_________________________________________________________________________________________"
+    # Remove old versions
+    sudo apt-get remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
+    # Install prerequisites
+    sudo apt-get update
+    sudo apt-get install -y ca-certificates curl gnupg
+    # Add Docker's official GPG key
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    # Add the repository
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    # Install Docker Engine + CLI + Compose plugin
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # Add current user to docker group (no sudo needed for docker commands)
+    sudo usermod -aG docker "$USER"
+    echo ""
+    echo "Docker installed. You may need to log out and back in for group changes."
+    echo "Run 'docker run hello-world' to verify."
+  fi
+}
+
+# Docker Compose (standalone, if compose plugin wasn't installed with Docker)
+check_and_install_docker_compose() {
+  echo "///////////////////////// PREPARING TO INSTALL DOCKER COMPOSE //////////////////////////"
+  if docker compose version &>/dev/null 2>&1 || command -v docker-compose &>/dev/null ; then
+    echo "Docker Compose is already installed"
+    docker compose version 2>/dev/null || docker-compose --version 2>/dev/null
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing Docker Compose plugin..."
+    echo "_________________________________________________________________________________________"
+    sudo apt-get update
+    sudo apt-get install -y docker-compose-plugin
+    echo "Docker Compose installed: $(docker compose version)"
+  fi
+}
+
+# lazydocker — terminal UI for Docker
+check_and_install_lazydocker() {
+  echo "///////////////////////// PREPARING TO INSTALL LAZYDOCKER //////////////////////////"
+  if command -v lazydocker &>/dev/null ; then
+    echo "lazydocker is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing lazydocker..."
+    echo "_________________________________________________________________________________________"
+    curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+  fi
+}
+
+# lazygit — terminal UI for Git
+check_and_install_lazygit() {
+  echo "///////////////////////// PREPARING TO INSTALL LAZYGIT //////////////////////////"
+  if command -v lazygit &>/dev/null ; then
+    echo "lazygit is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing lazygit..."
+    echo "_________________________________________________________________________________________"
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit /usr/local/bin
+    rm -f lazygit lazygit.tar.gz
+  fi
+}
+
+# ripgrep — fast search (rg)
+check_and_install_ripgrep() {
+  echo "///////////////////////// PREPARING TO INSTALL RIPGREP //////////////////////////"
+  if command -v rg &>/dev/null ; then
+    echo "ripgrep is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing ripgrep..."
+    echo "_________________________________________________________________________________________"
+    sudo apt-get install -y ripgrep
+  fi
+}
+
+# fd — modern find alternative
+check_and_install_fd() {
+  echo "///////////////////////// PREPARING TO INSTALL FD //////////////////////////"
+  if command -v fd &>/dev/null || command -v fdfind &>/dev/null ; then
+    echo "fd is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing fd-find..."
+    echo "_________________________________________________________________________________________"
+    sudo apt-get install -y fd-find
+    # Create fd symlink (Ubuntu installs as fdfind)
+    if command -v fdfind &>/dev/null && ! command -v fd &>/dev/null; then
+      sudo ln -sf "$(command -v fdfind)" /usr/local/bin/fd
+    fi
+  fi
+}
+
+# bat — modern cat with syntax highlighting
+check_and_install_bat() {
+  echo "///////////////////////// PREPARING TO INSTALL BAT //////////////////////////"
+  if command -v bat &>/dev/null || command -v batcat &>/dev/null ; then
+    echo "bat is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing bat..."
+    echo "_________________________________________________________________________________________"
+    sudo apt-get install -y bat
+    # Create bat symlink (Ubuntu installs as batcat)
+    if command -v batcat &>/dev/null && ! command -v bat &>/dev/null; then
+      sudo ln -sf "$(command -v batcat)" /usr/local/bin/bat
+    fi
+  fi
+}
+
+# fzf — fuzzy finder
+check_and_install_fzf() {
+  echo "///////////////////////// PREPARING TO INSTALL FZF //////////////////////////"
+  if command -v fzf &>/dev/null ; then
+    echo "fzf is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing fzf..."
+    echo "_________________________________________________________________________________________"
+    sudo apt-get install -y fzf
+  fi
+}
+
+# tmux — terminal multiplexer
+check_and_install_tmux() {
+  echo "///////////////////////// PREPARING TO INSTALL TMUX //////////////////////////"
+  if command -v tmux &>/dev/null ; then
+    echo "tmux is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing tmux..."
+    echo "_________________________________________________________________________________________"
+    sudo apt-get install -y tmux
+  fi
+}
+
+# eza — modern ls replacement
+check_and_install_eza() {
+  echo "///////////////////////// PREPARING TO INSTALL EZA //////////////////////////"
+  if command -v eza &>/dev/null ; then
+    echo "eza is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing eza..."
+    echo "_________________________________________________________________________________________"
+    sudo mkdir -p /etc/apt/keyrings
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+    sudo chmod 644 /etc/apt/keyrings/gierens.gpg
+    sudo apt-get update
+    sudo apt-get install -y eza
+  fi
+}
+
+# zoxide — smart cd replacement
+check_and_install_zoxide() {
+  echo "///////////////////////// PREPARING TO INSTALL ZOXIDE //////////////////////////"
+  if command -v zoxide &>/dev/null ; then
+    echo "zoxide is already installed"
+    echo "_________________________________________________________________________________________"
+  else
+    echo "Installing zoxide..."
+    echo "_________________________________________________________________________________________"
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    echo ""
+    echo "Add to your shell rc: eval \"\$(zoxide init bash)\" or eval \"\$(zoxide init zsh)\""
+  fi
 }
 
 # test these functions individually
 install_all_programs() {
-  check_and_install_grub_customizer ;
-  check_and_install_htop ;
-  check_and_install_tree ; 
-  check_and_install_rust ;
-  check_and_install_flutter_and_dart ;
-  check_and_install_zsh ;
-  check_and_install_theme ;
-  check_and_install_vscode ;
-  check_and_install_space_vim ;
-  check_and_install_vim ;
-  check_and_install_insomnia ;
-  check_and_install_postman ;
-  check_and_install_mongodb ;
-  check_and_install_mongo_compass ;
-  check_and_install_postgresql ;
-  check_and_install_robo3t ;
-  check_and_install_beekeeper_studio ;
-  check_and_install_google_chrome ;
-  check_and_install_slack ;
-  check_and_install_discord ;
-  check_and_install_nvm ;
-  install_global_npm_packages ;
+  for func in "${FUNCTIONS_ARRAY[@]}"; do
+    $func
+  done
 }
 
 FUNCTIONS_ARRAY=(
-  check_and_install_grub_customizer
+  # ── Essentials ──
+  check_and_install_docker
+  check_and_install_docker_compose
+  check_and_install_vim
   check_and_install_htop
   check_and_install_tree
+  check_and_install_nvm
   check_and_install_rust
-  check_and_install_flutter_and_dart
   check_and_install_zsh
-  check_and_install_theme
+  check_and_install_tmux
+  # ── Modern CLI Tools ──
+  check_and_install_ripgrep
+  check_and_install_fd
+  check_and_install_bat
+  check_and_install_fzf
+  check_and_install_eza
+  check_and_install_zoxide
+  check_and_install_lazygit
+  check_and_install_lazydocker
+  # ── Editors & IDEs ──
   check_and_install_vscode
   check_and_install_space_vim
-  check_and_install_vim
+  # ── API Tools ──
   check_and_install_insomnia
   check_and_install_postman
+  # ── Databases ──
   check_and_install_mongodb
-  check_and_install_mongo_compass
   check_and_install_postgresql
-  check_and_install_robo3t
   check_and_install_beekeeper_studio
+  # ── Communication ──
   check_and_install_google_chrome
   check_and_install_slack
   check_and_install_discord
-  check_and_install_nvm
+  # ── Languages ──
+  check_and_install_flutter_and_dart
+  # ── Other ──
+  check_and_install_grub_customizer
   install_global_npm_packages
 )
 
 PROGRAM_NAMES_ARRAY=(
-  'Grub Customizer'
-  'Htop(process manager)'
-  'Tree(graphically displays dir tree)'
+  # ── Essentials ──
+  'Docker Engine'
+  'Docker Compose'
+  'Vim'
+  'Htop (process manager)'
+  'Tree (directory visualization)'
+  'NVM (Node Version Manager)'
   'Rust Lang'
-  'Flutter and Dart'
   'Zshell'
-  'Theme.sh'
+  'tmux (terminal multiplexer)'
+  # ── Modern CLI Tools ──
+  'ripgrep (fast search — rg)'
+  'fd (modern find)'
+  'bat (modern cat with syntax highlighting)'
+  'fzf (fuzzy finder)'
+  'eza (modern ls)'
+  'zoxide (smart cd)'
+  'lazygit (terminal git UI)'
+  'lazydocker (terminal docker UI)'
+  # ── Editors & IDEs ──
   'VS Code'
   'Space Vim'
-  'Vim'
+  # ── API Tools ──
   'Insomnia'
   'Postman'
+  # ── Databases ──
   'MongoDB'
-  'MongoDB Compass'
   'PostgreSQL'
-  'Robo 3t'
   'Beekeeper Studio'
+  # ── Communication ──
   'Google Chrome'
   'Slack'
   'Discord'
-  'NVM'
+  # ── Languages ──
+  'Flutter and Dart'
+  # ── Other ──
+  'Grub Customizer'
   'Global NPM Packages'
 )

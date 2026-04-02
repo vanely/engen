@@ -62,7 +62,7 @@ show_header() {
     clear
     echo "################################################################"
     echo "#                                                              #"
-    echo "#              CURSOR IDE INSTALLATION SCRIPT                 #"
+    echo "#              CURSOR IDE INSTALLATION SCRIPT                  #"
     echo "#                                                              #"
     echo "#          AI-Powered Code Editor Installation                 #"
     echo "#                                                              #"
@@ -239,7 +239,7 @@ install_deb() {
     # Verify installation
     if command -v cursor &> /dev/null; then
         log "Cursor IDE installed successfully via .deb package"
-        CURSOR_BINARY=$(which cursor)
+        CURSOR_BINARY=$(command -v cursor)
     else
         error ".deb installation failed"
         return 1
@@ -355,7 +355,7 @@ verify_installation() {
         log "Cursor IDE installed successfully!"
         info "Command: cursor"
         info "Version: $version"
-        info "Location: $(which cursor)"
+        info "Location: $(command -v cursor)"
     else
         error "Cursor command not found in PATH"
         return 1

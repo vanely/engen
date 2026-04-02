@@ -1329,10 +1329,10 @@ main() {
     if [[ "$VERIFY_MODE" == "true" ]]; then
         echo "################################################################"
         echo "#                                                              #"
-        echo "#          KDE NEON OPTIMIZATION VERIFICATION MODE            #"
+        echo "#          KDE NEON OPTIMIZATION VERIFICATION MODE             #"
         echo "#                                                              #" 
-        echo "#          Shows what changes would be made                   #"
-        echo "#          WITHOUT actually applying them                     #"
+        echo "#          Shows what changes would be made                    #"
+        echo "#          WITHOUT actually applying them                      #"
         echo "#                                                              #"
         echo "################################################################"
         echo
@@ -1342,10 +1342,10 @@ main() {
         clear
         echo "################################################################"
         echo "#                                                              #"
-        echo "#          KDE NEON ULTIMATE OPTIMIZATION SCRIPT              #"
+        echo "#          KDE NEON ULTIMATE OPTIMIZATION SCRIPT               #"
         echo "#                                                              #" 
-        echo "#          Replicates 90% of Pop!_OS Performance              #"
-        echo "#          Optimized for Development + Content Creation       #"
+        echo "#          Replicates 90% of Pop!_OS Performance               #"
+        echo "#          Optimized for Development + Content Creation        #"
         echo "#                                                              #"
         echo "################################################################"
         echo

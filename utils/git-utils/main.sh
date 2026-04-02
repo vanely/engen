@@ -1,234 +1,150 @@
 #!/bin/bash
+# ================================================================
+# engen — Git Utilities Menu
+# ================================================================
 
-ROOT_FS_LOCATION=""
-if [[ -z ${ROOT_FS_LOCATION} ]]; then
-  ROOT_FS_LOCATION="${ENGEN_FS_LOCATION}"
-fi
+source "${ENGEN_ROOT}/utils/git-utils/git_update_repos.sh"
+source "${ENGEN_ROOT}/utils/git-utils/git_utils.sh"
 
-# spellcheck source="${HOME}/engen/utils/git-utils/git_update_repos.sh"
-source "${ROOT_FS_LOCATION}/utils/git-utils/git_update_repos.sh"
-# spellcheck source="${HOME}/engen/utils/helpers/validation.sh"
-source "${ROOT_FS_LOCATION}/utils/helpers/validation.sh"
-# spellcheck source="${HOME}/engen/utils/git-utils/git_utils.sh"
-source "${ROOT_FS_LOCATION}/utils/git-utils/git_utils.sh"
+# ----------------------------------------------------------------
+# Git operations
+# ----------------------------------------------------------------
 
-#arg1=CONTEXT_ROOT_DIR_NAME
-git_update() {
-  local CONTEXT_ROOT_DIR_NAME
-  CONTEXT_ROOT_DIR_NAME="${1}"
-  choose_repos_to_status_or_update "update" "${CONTEXT_ROOT_DIR_NAME}"
+git_update_repos() {
+  section_header "Git — Update Repos"
+  choose_repos "update"
 }
 
-#arg1=CONTEXT_ROOT_DIR_NAME
-git_status() {
-  local CONTEXT_ROOT_DIR_NAME
-  CONTEXT_ROOT_DIR_NAME="${1}"
-  choose_repos_to_status_or_update "status" "${CONTEXT_ROOT_DIR_NAME}"
+git_status_repos() {
+  section_header "Git — Repo Status"
+  choose_repos "status"
 }
 
-create_git_repo() {
-  local name
-  local GIT_USER
-  GIT_USER="${name[2]}"
-  name=($(grep "name" ~/.gitconfig))
+git_create_repo() {
+  section_header "Git — Create Repo"
 
-  echo
-  echo "========================================================================================="
-  echo "Signing into Github..."
+  ensure_git_configured || return 1
+  local git_user
+  git_user=$(git_username)
+
   github_auth
-  echo "Signed into Github."
-  echo
 
-  if [[ -n "${GIT_USER}" ]] ; then 
-    local REPO_LIST
-    local REPO_ARR
-    local REPO_NAME_EXISTS
-    REPO_LIST=$(gh repo list "${GIT_USER}" --source)
-    REPO_ARR=()
-    REPO_NAME_EXISTS="false"
+  local repo_name
+  repo_name=$(prompt "Repo name" "")
+  [ -z "${repo_name}" ] && return
 
-    # gh repo list user_name --source
-    for REPO in ${REPO_LIST}
-    do
-      IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
-      REPO_ARR+=(${REPO_TOUPLE[1]})
-    done
+  local visibility
+  visibility=$(prompt "Visibility (public/private)" "public")
 
-    echo
-    echo -n "Repo Name > "
-    read -r new_repo_name
+  create_repo_with_gh_cli "${repo_name}" "${visibility}"
+  ok "Created: ${git_user}/${repo_name} (${visibility})"
+  echo ""
+}
 
-    while "true"
-    do
-      for REPO_NAME in ${REPO_ARR[@]}
-      do
-        if [[ "${REPO_NAME}" == "${new_repo_name}" ]] ; then
-          REPO_NAME_EXISTS="true"
-        fi
-      done
+git_delete_repo() {
+  section_header "Git — Delete Repo"
 
-      if [[ "${REPO_NAME_EXISTS}" == "true" ]] ; then
-        REPO_NAME_EXISTS="false"
-        echo 
-        echo "Repo: ${new_repo_name} already exists"
-        echo -n "Repo Name > "
-        read -r new_repo_name
-      else
-        echo
-        echo "Enter repo access level: 'public' or 'private'"
-        echo
-        echo -n "Repo Access Level > "
-        read -r repo_access_level
-        create_repo_with_gh_cli "${new_repo_name}" "${repo_access_level}"
-        break
-      fi
-    done
-  else
-    echo
-    echo "a global reference to your git config is needed to create repos"
-    echo "you'll need to run the following git commands"
-    echo
-    echo "git config --global user.name '<user_name>'"
-    echo "git config --global user.email '<email>'"
-    echo
-    echo "replace everything inside of the single 'quotes' with your respective credentials"
-    echo
+  ensure_git_configured || return 1
+  local git_user
+  git_user=$(git_username)
+
+  github_auth
+
+  # List repos
+  local repos
+  repos=$(gh repo list "${git_user}" --source --limit 50 2>/dev/null)
+
+  if [ -z "${repos}" ]; then
+    warn "No repos found or not authenticated."
+    return
   fi
 
-  echo "Signing out of Github..."
-  github_deauth
-  echo "========================================================================================="
+  bline ""
+  bline "Your repos:"
+  echo "${repos}" | while read -r line; do bline "  ${line}"; done
+  bline ""
+
+  local repo_name
+  repo_name=$(prompt "Repo name to delete" "")
+  [ -z "${repo_name}" ] && return
+
+  local confirm
+  confirm=$(prompt "Delete ${git_user}/${repo_name}? This is irreversible. (y/n)" "n")
+  if is_yes "${confirm}"; then
+    delete_repo_with_gh_cli "${git_user}/${repo_name}"
+    ok "Deleted: ${git_user}/${repo_name}"
+  else
+    bline "Cancelled."
+  fi
+  echo ""
 }
 
-delete_git_repo() {
-  local name
-  local GIT_USER
-  name=($(grep "name" ~/.gitconfig))
-  GIT_USER="${name[2]}"
-  
-  echo
-  echo "========================================================================================="
-  echo "Signing into Github..."
-  github_auth
-  echo "Signed into Github."
-  echo
+git_setup_credentials() {
+  section_header "Git — Setup Credentials"
 
-  if [[ -n "${GIT_USER}" ]] ; then
-    local REPO_LIST
-    local REPO_ARR
-    local REPO_NAME_EXISTS
-    REPO_LIST=$(gh repo list "${GIT_USER}" --source)
-    REPO_ARR=()
-    REPO_NAME_EXISTS="false"
+  local current_user current_email
+  current_user=$(git_username)
+  current_email=$(git_email)
 
-    # gh repo list user_name --source
-    for REPO in ${REPO_LIST}
-    do
-      IFS="/" read -r -a REPO_TOUPLE <<< ${REPO}
-      REPO_ARR+=(${REPO_TOUPLE[1]})
-    done
-    local REPO_ARR_LEN
-    REPO_ARR_LEN="${#REPO_ARR[@]}"
+  local user
+  user=$(prompt "GitHub username" "${current_user}")
+  local email
+  email=$(prompt "GitHub email" "${current_email}")
 
-    # generate list of existing repo names
-    for (( i=0; i<"${REPO_ARR_LEN}"; i++ ))
-    do
-      echo "${i}: ${REPO_ARR[i]}"
-    done
-    echo
-    echo "From the above list choose a repo to delete by its index"
-    echo "or as a list of space separated indexes. EX: 0 1 2"
-    echo
-    echo -n "> "
-    read -r indexes
-
-    while "true"
-    do
-      if [[ "$(input_is_number_with_possible_spaces "${indexes}")" == "true" ]] ; then
-        for i in ${indexes[@]}
-        do
-          delete_repo_with_gh_cli "${REPO_ARR[i]}"
-        done
-        break
-      else
-        echo
-        echo "Input must be a number in the above list, or 'all'"
-        echo
-        echo -n "> "
-        read -r indexes
-      fi
-    done
-  else
-    echo
-    echo "a global reference to your git config is needed to delete repos"
-    echo "you'll need to run the following git commands"
-    echo
-    echo "git config --global user.name '<user_name>'"
-    echo "git config --global user.email '<email>'"
-    echo
-    echo "replace everything inside of the single 'quotes' with your respective credentials"
-    echo
+  if [ -n "${user}" ] && [ -n "${email}" ]; then
+    git config --global user.name "${user}"
+    git config --global user.email "${email}"
+    git config --global credential.helper store
+    ok "Git config set: ${user} <${email}>"
   fi
 
-  echo "Signing out of Github..."
-  github_deauth
-  echo "========================================================================================="
-}
-
-GIT_UTILS_ARRAY=(
-  git_update
-  git_status
-  create_git_repo
-  delete_git_repo
-)
-GIT_UTIL_OPTION_NAMES_ARRAY=(
-  'Update Git Repo(s)'
-  'Status of Git Repo(s)'
-  'Create Repo'
-  'Delete Repo'
-)
-GIT_UTILS_ARRAY_LEN="${#GIT_UTILS_ARRAY[@]}"
-
-# arg1=CONTEXT_ROOT_DIR_NAME
-# arg2=REF_TO_FS_LOCATION
-git_utils() {
-  local CONTEXT_ROOT_DIR_NAME
-  local REF_TO_FS_LOCATION
-  CONTEXT_ROOT_DIR_NAME="${1}"
-  REF_TO_FS_LOCATION="${2}"
-
-  echo
-  echo "CONTEXT_ROOT_DIR_NAME: ${1}"
-  echo "========================================================================================="
-  echo "================================== [--GIT UTILS--] ======================================"
-  echo "========================================================================================="
-  echo
-  for (( i=0; i<"${GIT_UTILS_ARRAY_LEN}"; i++ ))
-  do
-    echo "${i}: ${GIT_UTIL_OPTION_NAMES_ARRAY[i]}"
-  done
-  echo
-  echo "Choose an option from the list above. EX:"
-  echo "0 1 2"
-  echo
-  echo -n "> "
-  read -r index
-
-  while "true" 
-  do
-    if [[ "$(input_is_number "${index}")" != "true" ]] ; then
-      echo
-      echo "Input must be a number in the above list"
-      echo
-      echo -n "> "
-      read -r index
+  # GitHub CLI auth
+  bline ""
+  if gh_authenticated; then
+    ok "Already authenticated with GitHub CLI"
+  else
+    bline "Authenticate with GitHub for private repo access:"
+    bline "  1. Go to: https://github.com/settings/tokens"
+    bline "  2. Generate new token (classic)"
+    bline "  3. Scopes: repo, read:org"
+    bline ""
+    local token
+    token=$(prompt_secret "Paste token (or Enter to skip)")
+    if [ -n "${token}" ]; then
+      echo "${token}" | gh auth login --with-token 2>/dev/null
+      if gh_authenticated; then
+        ok "Authenticated with GitHub"
+      else
+        err "Authentication failed — try: gh auth login"
+      fi
     else
-      if [[ "${index}" == 0 ]] || [[ "${index}" == 1 ]] ; then
-        ${GIT_UTILS_ARRAY[index]} "${CONTEXT_ROOT_DIR_NAME}"
-      else
-        ${GIT_UTILS_ARRAY[index]}
-      fi
-      break
+      bline "Skipped."
     fi
-  done
+  fi
+  echo ""
+}
+
+# ----------------------------------------------------------------
+# Menu
+# ----------------------------------------------------------------
+
+GIT_NAMES=(
+  "Update Repos (pull)"
+  "Repo Status"
+  "Create Repo"
+  "Delete Repo"
+  "Setup Git Credentials"
+)
+
+GIT_FUNCS=(
+  git_update_repos
+  git_status_repos
+  git_create_repo
+  git_delete_repo
+  git_setup_credentials
+)
+
+git_utils() {
+  section_header "Git Utils"
+  menu_select "Choose an operation:" GIT_NAMES GIT_FUNCS
 }
