@@ -257,22 +257,27 @@ config_exists() {
 menu_select() {
   local prompt_text="${1}"
   shift
-  local -n _names=$1
-  local -n _funcs=$2
+  local _names_ref="$1"
+  local _funcs_ref="$2"
   shift 2
-  local extra_args=("$@")
-  local len=${#_names[@]}
+
+  # Bash 3.2 (macOS) compatible — no namerefs, no local inside eval
+  local _ms_len _ms_fn _ms_name
+  eval "_ms_len=\${#${_names_ref}[@]}"
 
   echo ""
   echo "  ${prompt_text}"
   echo ""
-  for (( i=0; i<len; i++ )); do
-    echo "  ${i}: ${_names[$i]}"
+  local i
+  for (( i=0; i<_ms_len; i++ )); do
+    eval "_ms_name=\${${_names_ref}[\$i]}"
+    echo "  ${i}: ${_ms_name}"
   done
   echo ""
 
   while true; do
     echo -n "  > "
+    local choice
     read -r choice
 
     if [[ -z "${choice}" ]]; then
@@ -283,25 +288,29 @@ menu_select() {
     lower_choice=$(echo "${choice}" | tr '[:upper:]' '[:lower:]')
 
     if [[ "${lower_choice}" == "all" ]]; then
-      for (( i=0; i<len; i++ )); do
-        ${_funcs[$i]} "${extra_args[@]}"
+      for (( i=0; i<_ms_len; i++ )); do
+        eval "_ms_fn=\${${_funcs_ref}[\$i]}"
+        ${_ms_fn} "$@"
       done
       break
-    elif [[ "${choice}" =~ ^[0-9]+$ ]] && [ "${choice}" -lt "${len}" ]; then
-      ${_funcs[$choice]} "${extra_args[@]}"
+    elif [[ "${choice}" =~ ^[0-9]+$ ]] && [ "${choice}" -lt "${_ms_len}" ]; then
+      eval "_ms_fn=\${${_funcs_ref}[\${choice}]}"
+      ${_ms_fn} "$@"
       break
     elif [[ "${choice}" =~ ^[0-9\ ]+$ ]]; then
       # Multi-select: space-separated numbers
       local any_valid=false
+      local idx
       for idx in ${choice}; do
-        if is_number "${idx}" && [ "${idx}" -lt "${len}" ]; then
-          ${_funcs[$idx]} "${extra_args[@]}"
+        if is_number "${idx}" && [ "${idx}" -lt "${_ms_len}" ]; then
+          eval "_ms_fn=\${${_funcs_ref}[\${idx}]}"
+          ${_ms_fn} "$@"
           any_valid=true
         else
           err "Invalid index: ${idx}"
         fi
       done
-      if $any_valid; then
+      if ${any_valid}; then
         break
       fi
     else
