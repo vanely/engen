@@ -39,23 +39,14 @@ shorten_url() {
     local long_url="${1}"
     local short_url
 
-    # Try cleanuri.com (returns JSON)
-    short_url=$(curl -s -X POST "https://cleanuri.com/api/v1/shorten" \
-        -d "url=${long_url}" 2>/dev/null \
-        | python3 -c "import json,sys; print(json.load(sys.stdin).get('result_url',''))" 2>/dev/null)
-    if [[ -n "${short_url}" ]] && [[ "${short_url}" == https://* ]]; then
-        echo "${short_url}"
-        return
-    fi
-
-    # Fallback: ulvis.net
+    # ulvis.net — single redirect, no blacklisting
     short_url=$(curl -s "https://ulvis.net/api.php?url=${long_url}" 2>/dev/null)
     if [[ -n "${short_url}" ]] && [[ "${short_url}" == https://* ]]; then
         echo "${short_url}"
         return
     fi
 
-    # Final fallback — return original
+    # Fallback — return original
     echo "${long_url}"
 }
 

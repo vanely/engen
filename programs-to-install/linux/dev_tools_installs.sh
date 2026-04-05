@@ -807,6 +807,47 @@ check_and_install_zoxide() {
   fi
 }
 
+# n8n — workflow automation (self-hosted, runs in Docker)
+check_and_install_n8n() {
+  echo "///////////////////////// PREPARING TO INSTALL N8N //////////////////////////"
+  if docker image inspect n8nio/n8n &>/dev/null 2>&1 ; then
+    echo "n8n Docker image is already pulled"
+    echo "_________________________________________________________________________________________"
+    echo
+  else
+    # n8n runs as a Docker container — ensure Docker is installed first
+    if ! command -v docker &>/dev/null ; then
+      echo "Docker is required for n8n. Installing Docker first..."
+      check_and_install_docker
+    fi
+    echo "Pulling n8n Docker image..."
+    echo "_________________________________________________________________________________________"
+    echo
+    docker pull n8nio/n8n:latest
+    echo ""
+    echo "n8n image pulled. Start with:"
+    echo "  docker run -it --rm -p 5678:5678 n8nio/n8n"
+    echo "Or use docker-compose in your project."
+  fi
+}
+
+# cloudflared — Cloudflare Tunnel client
+check_and_install_cloudflared() {
+  echo "///////////////////////// PREPARING TO INSTALL CLOUDFLARED //////////////////////////"
+  if command -v cloudflared &>/dev/null ; then
+    echo "cloudflared is already installed: $(cloudflared --version)"
+    echo "_________________________________________________________________________________________"
+    echo
+  else
+    echo "Installing cloudflared..."
+    echo "_________________________________________________________________________________________"
+    echo
+    curl -L --output /tmp/cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+    sudo dpkg -i /tmp/cloudflared.deb
+    rm -f /tmp/cloudflared.deb
+  fi
+}
+
 # test these functions individually
 install_all_programs() {
   for func in "${FUNCTIONS_ARRAY[@]}"; do
@@ -850,6 +891,9 @@ FUNCTIONS_ARRAY=(
   check_and_install_discord
   # ── Languages ──
   check_and_install_flutter_and_dart
+  # ── Automation & Tunnels ──
+  check_and_install_n8n
+  check_and_install_cloudflared
   # ── Other ──
   check_and_install_grub_customizer
   install_global_npm_packages
@@ -891,6 +935,9 @@ PROGRAM_NAMES_ARRAY=(
   'Discord'
   # ── Languages ──
   'Flutter and Dart'
+  # ── Automation & Tunnels ──
+  'n8n (workflow automation — Docker)'
+  'cloudflared (Cloudflare Tunnel client)'
   # ── Other ──
   'Grub Customizer'
   'Global NPM Packages'
