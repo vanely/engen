@@ -83,7 +83,7 @@ choose_repos() {
   local selection
   selection=$(prompt "Select repos (numbers, or 'all')" "all")
 
-  if [[ "${selection,,}" == "all" ]]; then
+  if [[ "$(echo "${selection}" | tr '[:upper:]' '[:lower:]')" == "all" ]]; then
     for dir in "${repo_dirs[@]}"; do
       if [ "${operation}" == "update" ]; then
         update_git_repo "${dir}"

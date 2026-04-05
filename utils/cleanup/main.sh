@@ -67,7 +67,7 @@ remove_directories() {
   local selection
   selection=$(prompt "Remove (numbers, 'all', or 'env' for entire environment)" "")
 
-  case "${selection,,}" in
+  case "$(echo "${selection}" | tr '[:upper:]' '[:lower:]')" in
     env)
       local confirm
       confirm=$(prompt "Delete ENTIRE environment at ${base_path}? (y/n)" "n")

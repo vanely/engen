@@ -80,7 +80,7 @@ else:
   selection=$(prompt "Remove (numbers, space-separated, or 'all')" "")
 
   local indices_to_remove=()
-  if [[ "${selection,,}" == "all" ]]; then
+  if [[ "$(echo "${selection}" | tr '[:upper:]' '[:lower:]')" == "all" ]]; then
     for i in "${!tool_names[@]}"; do
       indices_to_remove+=("$i")
     done

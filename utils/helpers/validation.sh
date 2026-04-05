@@ -25,7 +25,7 @@ input_is_number_with_possible_spaces() {
 
 # Validate the word "all"
 input_is_the_word_all() {
-  if [[ "${1,,}" == "all" ]]; then
+  if [[ "$(echo "${1}" | tr '[:upper:]' '[:lower:]')" == "all" ]]; then
     echo "true"
   else
     echo "false"
@@ -72,7 +72,7 @@ config_file_exists() {
 
 # Validate y/n input
 input_is_y_or_n() {
-  if [[ "${1,,}" == "y" ]] || [[ "${1,,}" == "n" ]]; then
+  if [[ "$(echo "${1}" | tr '[:upper:]' '[:lower:]')" == "y" ]] || [[ "$(echo "${1}" | tr '[:upper:]' '[:lower:]')" == "n" ]]; then
     echo "true"
   else
     echo "false"

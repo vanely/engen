@@ -134,7 +134,7 @@ install_all_vscode_extensions() {
     for (( j=0; j<"${INSTALLS_LEN}"; j++ ))
     do
       # (,,)=toLowerCase, (^^)=toUpperCase
-      if [[ "${EXTENSIONS_LIST_IDS[i],,}" == "${INSTALLS_ARR[j],,}" ]] ; then
+      if [[ "$(echo "${EXTENSIONS_LIST_IDS[i]}" | tr '[:upper:]' '[:lower:]')" == "$(echo "${INSTALLS_ARR[j]}" | tr '[:upper:]' '[:lower:]')" ]] ; then
         ALREADY_INSTALLED="true"
         break
       fi
@@ -171,7 +171,7 @@ choose_extensions_to_install() {
     for (( j=0; j<"${INSTALLS_LEN}"; j++ ))
     do
       # (,,)=toLowerCase, (^^)=toUpperCase
-      if [[ "${EXTENSIONS_LIST_IDS[i],,}" == "${INSTALLS_ARR[j],,}" ]] ; then
+      if [[ "$(echo "${EXTENSIONS_LIST_IDS[i]}" | tr '[:upper:]' '[:lower:]')" == "$(echo "${INSTALLS_ARR[j]}" | tr '[:upper:]' '[:lower:]')" ]] ; then
         ALREADY_INSTALLED="true"
         break
       fi

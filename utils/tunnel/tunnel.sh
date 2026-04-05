@@ -87,7 +87,7 @@ start_tunnel() {
         echo -e "${YELLOW}⚠ Nothing seems to be running on port ${port}${NC}"
         echo -ne "Continue anyway? (y/n): "
         read -r confirm
-        [[ "${confirm,,}" != "y" ]] && return 0
+        [[ "$(echo "${confirm}" | tr '[:upper:]' '[:lower:]')" != "y" ]] && return 0
     fi
 
     # Check cloudflared
